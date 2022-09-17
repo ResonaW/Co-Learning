@@ -1,0 +1,122 @@
+
+{{ block content }}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Human-AI Co-Learning</title>
+        <style>
+             @import url(http://fonts.googleapis.com/css?family=Lato:400,700,900);
+            .form {
+            }
+            .form header {
+                padding: 1em 0;
+                padding-bottom: 1em;
+            }
+            .form header h1 {
+                text-align: center;
+                font-size: 1.3em;
+                color: #5f7796;
+                font-weight: bolder;
+            }
+            .form header h2 {
+                text-align: center;
+                font-size: 1em;
+                color: #94a9c3;
+                font-weight: normal;
+            }
+            .form .button-submit {
+                font-weight: regular;
+                color: #fff;
+                font-size: 1em;
+                padding: 0.8em 2em;
+                border-radius: 50em;
+                border: none;
+                background: #5f7796;
+                margin: 1em auto 0.3em;
+                display: block;
+                transition: all 0.2s linear;
+            }
+            .form .button-submit:hover {
+                background: #374558;
+            }
+        </style>
+        <style>
+            span1 {
+                font-weight:bold;
+                color:#930000;
+                font-size: 30px;
+            }
+            span2{
+                font-weight:bold;
+                font-size: 20px;
+            }
+            /* 创建三个相等的列 */
+            .column {
+            float: inherit;
+            width: 33.33%;
+            position:relative;
+            right:-115px;
+            }
+            
+            /* 列后清除浮动 */
+            .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            }
+        </style>
+    </head>
+    <script>
+        var x = {{ ID }} - 100
+        function round_left(){
+            var y = 20 - x ;
+            document.getElementById("round").innerHTML="本次标注任务剩余任务数量为："+y;
+        }
+        function uploaddata(){
+            var answer = $("input[name='place1']:checked").val();
+            document.getElementById("sen_result").value=answer;
+        }
+    </script>
+</html>
+
+<h3 align="center">The Co-design of an AI-Human Annotation Tool</h3>
+
+<hr>
+
+<h5 id="round" align="center" onmouseover='round_left()'>当前标注任务的位置是：
+    <span>
+        {{ ID }}/120
+    </span>
+</h5>
+
+<div class="card bg-light m-3">
+    <div class="card-body">
+    <b style="font-size: 20px;">微博内容:</b>
+    <p>{{ content_weibo }}</p>
+    </div>
+</div>
+    <div class="form">
+        <header>
+            <h2>请根据微博内容判断该条微博所属的标签类别，你标注的结果将最终决定你的薪酬！</h2>
+        </header>
+        <div class="row" align="center">
+            <div class="column">
+                <input type="radio" name="place1" value="111" checked="checked" /><span2 style="font-size: 20px color= #000">  积极</span>
+            </div>
+            <div class="column">
+              <input type="radio" name="place1" value="222" checked="checked" /><span2 style="font-size: 20px color= #000">  消极</span>
+            </div>
+        </div>
+
+        <button class="button-submit" onclick="uploaddata()">提交</button>
+
+    <input type="hidden" name="sen_result" id="sen_result" />
+
+</div>
+</div>
+
+    {{ formfield_errors 'sen_result' }}
+{{ endblock }}
+
+
