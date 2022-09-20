@@ -7,11 +7,11 @@ class PlayerBot(Bot):
         group_id = get_group_id(self.player.id_in_group)
         if self.round_number == 1:
             if group_id in ['A','D']:
-                yield Introduction, dict(test=25)
+                yield Introduction, dict(test=35)
             if group_id in ['B','E']:
-                yield Introduction, dict(test=28)
+                yield Introduction, dict(test=38)
             if group_id in ['C','F']:
-                yield Introduction, dict(test=24.5)
+                yield Introduction, dict(test=34.5)
         if self.round_number <= 100:
             yield MyPage, dict(sen_result="1")
         if self.round_number == 100:

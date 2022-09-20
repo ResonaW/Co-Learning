@@ -6,3 +6,15 @@
 2022-09-20 16:31:42 circus[5566] [ERROR] exception Address already in use caught
 2022-09-20 19:32:47 circus[34630] [INFO] Starting master on pid 34630
 2022-09-20 19:32:47 circus[34630] [ERROR] exception Address already in use caught
+2022-09-20 22:37:52 circus[17361] [INFO] Starting master on pid 17361
+2022-09-20 22:37:52 circus[17361] [INFO] Arbiter now waiting for commands
+2022-09-20 22:37:52 circus[17361] [INFO] webapp started
+2022-09-20 23:11:20 circus[17361] [INFO] webapp stopped
+2022-09-20 23:11:49 circus[22713] [INFO] Starting master on pid 22713
+2022-09-20 23:11:49 circus[22713] [ERROR] exception Address already in use caught
+2022-09-20 23:12:49 circus[22887] [INFO] Starting master on pid 22887
+2022-09-20 23:12:49 circus[22887] [ERROR] exception Address already in use caught
+2022-09-20 23:13:25 circus[23020] [INFO] Starting master on pid 23020
+2022-09-20 23:13:25 circus[23020] [ERROR] exception Address already in use caught
+2022-09-20 23:15:39 circus[23370] [INFO] Starting master on pid 23370
+2022-09-20 23:15:39 circus[23370] [ERROR] exception Address already in use caught

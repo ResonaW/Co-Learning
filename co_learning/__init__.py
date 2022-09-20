@@ -26,7 +26,7 @@ def get_group_id(id_in_group):
     return sort
 
 class Bonus():
-    
+    '''计算受访者报酬'''
     def __init__(self, id_in_group, group_id) -> None:
         self.id_in_group =  id_in_group
         self.group_id = group_id
@@ -35,51 +35,45 @@ class Bonus():
         self.CSV_PATH = '/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'
         self.manual_csv_name = self.CSV_PATH+"%d_%s_test_manual.csv" % (self.id_in_group,self.group_id)
         self.model_csv_name = self.CSV_PATH+"%d_%s_test_model.csv" % (self.id_in_group,self.group_id)
-
+    '''检查csv文件是否存在 不存在时阻塞'''
     def manual_csv_name_check(self):
         while not os.path.exists(self.manual_csv_name):
             time.sleep(1)
         self.flag = True
-
     def model_csv_name_check(self):
         while not os.path.exists(self.model_csv_name):
             time.sleep(1)
         self.flag = True
-    
+    '''计算收益'''
     def correct_count(self,list_a,list_b):
         n1 = np.array(list_a) - np.array(list_b)
         return n1.tolist().count(0)
-
     def calculate_bonus(self):
         if self.group_id in ['B','E']:
             manual_df = pd.read_csv(self.manual_csv_name)
             human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
             salary = 10+human_correct*2-(20-human_correct)*1
             return salary
-
         if self.group_id in ['A','D']:
             manual_df = pd.read_csv(self.manual_csv_name)
             model_df = pd.read_csv(self.model_csv_name)
             human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
             AI_correct = self.correct_count(model_df['label'].to_list(),self.TRUE_LABELS)
-            # print(human_correct,AI_correct)
             salary = 10+human_correct*1-(20-human_correct)*0.5+AI_correct*1-(20-AI_correct)*0.5
             return salary
-
         if self.group_id in ['C','F']:
             manual_df = pd.read_csv(self.manual_csv_name)
             model_df = pd.read_csv(self.model_csv_name)
             human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
             human_AI_consistency_right = self.correct_count(model_df['label'].to_list(),manual_df['label'].to_list())
             salary = 10 + human_correct * 1 - (20 - human_correct) * 0.5 +human_AI_consistency_right*1-(20-human_AI_consistency_right)*0.5
-            return salary
-        
+            return salary   
         else:
             print(self.group_id)
 
 class C(BaseConstants):
     NAME_IN_URL = 'co_learning'
-    # 待修改
+    # 待修改 后续应该是600人
     PLAYERS_PER_GROUP = 30
     NUM_ROUNDS = 120
     file=pd.read_excel("/home/ubuntu/Otree_Project/Co-Learning/co_learning/情感分析_20220915.xlsx")
@@ -92,19 +86,24 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     c=C()
+    # 训练集dataframe
     df=c.file
+    # 计算报酬问题
     test = models.FloatField(
         label='在下面的输入框中给出你的答案，只有正确计算出薪酬才能开始接下来的标注任务',
     )
+    # 用户情感判断结果dataframe列表
     player_data = [pd.DataFrame(columns=["ID","content", "round", "result","id","group"]) for _ in range(c.PLAYERS_PER_GROUP)]
+    # 随机文本展示
     random_list = [[i for i in range(100)] for _ in range(100)]
     for i in range(100):
         random.shuffle(random_list[i])
-    random_show = [random]
+    # 用户Attention Check结果dataframe
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
-    score = models.IntegerField()
+    # 用户情感判断结果及Attention Check结果
     sen_result = models.IntegerField()
     ac_result = models.IntegerField()
+    # SurveyPage问题
     age = models.IntegerField(
         label='您的年龄段是?',
         choices=[['1', '18岁以下'], ['2', '18-25岁'], ['3', '26-30岁'], ['4', '31-35岁'], ['5', '35岁以上']],
@@ -160,6 +159,34 @@ class Player(BasePlayer):
     advice = models.StringField(label="您是否有其它的建议或意见，或者谈谈您对实验的感受？")
 
 # PAGES
+'''介绍界面'''
+class Introduction(Page):
+    form_fields = ['test']
+    form_model = 'player'
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
+    @staticmethod
+    def error_message(player, values):
+        group_id = get_group_id(player.id_in_group)
+        if group_id in ['C','F']:
+            print('你的答案是', values)
+            if values['test'] != 34.5:
+                return '你计算的薪酬有误，再重新想想吧！'
+        elif group_id in ['A','D']:
+            print('你的答案是', values)
+            if values['test'] != 35:
+                return '你计算的薪酬有误，再重新想想吧！'
+        elif group_id in ['B','E']:
+            print('你的答案是', values)
+            if values['test'] != 38:
+                return '你计算的薪酬有误，再重新想想吧！'
+    @staticmethod
+    def vars_for_template(player):
+        group_id = get_group_id(player.id_in_group)
+        return dict(id=group_id)
+
+'''预测100条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
     form_fields = ['sen_result']
@@ -173,6 +200,7 @@ class MyPage(Page):
             group_id = group_id,
             content_weibo=r_data[1],
             predict_weibo_sen = r_data[2],
+            # 可解释性导入
             image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
             )
     @staticmethod
@@ -190,9 +218,30 @@ class MyPage(Page):
             current_df['label'] = current_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
             current_df = current_df.sort_values(by='ID',ascending=True)
             current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
+    @staticmethod
     def is_displayed(player):
         return player.round_number <= 100
 
+'''Attention Check页面'''
+class MyAC(Page):
+    form_model = 'player'
+    form_fields = ['ac_result']
+    @staticmethod
+    def vars_for_template(player):
+        r_num = player.round_number
+        return dict(ID=r_num)
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        round_num = player.round_number
+        if round_num == 50:
+            round_result = player.ac_result
+            group_id = get_group_id(player.id_in_group)
+            player.player_ac.loc[len(player.player_ac.index)] = [round_num,round_result,player.id_in_group,group_id]
+            player.player_ac.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/attention_check/attention_check.csv", index=False)
+    def is_displayed(player):
+        return player.round_number == 50
+
+'''预测20条文本情感页面'''
 class MyTest(Page):
     form_model = 'player'
     form_fields = ['sen_result']
@@ -223,24 +272,25 @@ class MyTest(Page):
     def is_displayed(player):
         return player.round_number > 100
 
-class MyAC(Page):
+'''休息界面'''
+class RestPage(Page):
     form_model = 'player'
-    form_fields = ['ac_result']
+    def is_displayed(player):
+        return player.round_number % 20 == 0 and player.round_number < 100
     @staticmethod
     def vars_for_template(player):
-        r_num = player.round_number
-        return dict(ID=r_num)
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        round_num = player.round_number
-        if round_num == 50:
-            round_result = player.ac_result
-            group_id = get_group_id(player.id_in_group)
-            player.player_ac.loc[len(player.player_ac.index)] = [round_num,round_result,player.id_in_group,group_id]
-            player.player_ac.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/attention_check/attention_check.csv", index=False)
-    def is_displayed(player):
-        return player.round_number == 50
+        return dict(
+            round = player.round_number,
+        )
 
+'''100条标注后提示界面'''
+class ResultWaitPage(Page):
+    form_model = 'player'
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 100
+
+'''Survey页面'''
 class ExitSurveyPage(Page):
     form_model = 'player'
     form_fields = ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6','advice']
@@ -267,39 +317,8 @@ class ExitSurveyPage(Page):
         elif group_id in ['B','C','E','F']:
             while not bonus.flag:
                 bonus.model_csv_name_check()
-        
-class Introduction(Page):
-    form_fields = ['test']
-    form_model = 'player'
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == 1
-    @staticmethod
-    def error_message(player, values):
-        group_id = get_group_id(player.id_in_group)
-        if group_id in ['C','F']:
-            print('你的答案是', values)
-            if values['test'] != 24.5:
-                return '你计算的薪酬有误，再重新想想吧！'
-        elif group_id in ['A','D']:
-            print('你的答案是', values)
-            if values['test'] != 25:
-                return '你计算的薪酬有误，再重新想想吧！'
-        elif group_id in ['B','E']:
-            print('你的答案是', values)
-            if values['test'] != 28:
-                return '你计算的薪酬有误，再重新想想吧！'
-    @staticmethod
-    def vars_for_template(player):
-        group_id = get_group_id(player.id_in_group)
-        return dict(id=group_id)
 
-class ResultWaitPage(Page):
-    form_model = 'player'
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == 100
-
+'''展示报酬界面'''
 class RewardPage(Page):
     form_model = 'player'
     @staticmethod
@@ -314,15 +333,4 @@ class RewardPage(Page):
         player.player_data[player.id_in_group-1] = None
         return dict( reward=reward )
 
-class RestPage(Page):
-    form_model = 'player'
-    def is_displayed(player):
-        return player.round_number % 20 == 0 and player.round_number < 100
-    @staticmethod
-    def vars_for_template(player):
-        return dict(
-            round = player.round_number,
-        )
-
-
-page_sequence = [Introduction,MyPage,ResultWaitPage,MyTest,MyAC,RestPage,ExitSurveyPage,RewardPage]
+page_sequence = [Introduction,MyPage,MyAC,MyTest,RestPage,ResultWaitPage,ExitSurveyPage,RewardPage]
