@@ -8,11 +8,26 @@ from watchdog.events import *
 import re
 import pandas as pd
 import time
+import shutil
+
+def delete_folder_content(folder):
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 class FileEventHandler(FileSystemEventHandler):
-
+    
     def __init__(self, test_dataset, model, tokenizer) -> None:
         super().__init__()
+        # 正式使用时记得删除这一部分
+        self.target_path = '/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'
+        delete_folder_content('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/')
         # 在主程序里load初始模型，数据集，tokenizer，在这里使用
         self.test_dataset = test_dataset
         self.model = model
@@ -37,9 +52,8 @@ class FileEventHandler(FileSystemEventHandler):
             # 新出现的csv文件，进行模型训练和预测
             # print("file created:{0}".format(event.src_path))
             file_name = re.search('(\w+)\.csv',event.src_path).group(1)
-            print(file_name)
             if (file_name not in self.log_list) and ('manual' not in file_name):
-                print("用户有100条新提交")
+                print("%s提交100条训练" % file_name)
                 self.log_list.append(file_name)
                 # 模型训练阶段
                 time.sleep(3)
@@ -53,9 +67,11 @@ class FileEventHandler(FileSystemEventHandler):
                 test_df_model['label'] = labels
                 csv_name = file_name + '_test_model'
                 self.log_list.append(csv_name)
-                test_df_model.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'+csv_name+'.csv',index=False)
+                test_df_model.to_csv(self.target_path+csv_name+'.csv',index=False)
                 time.sleep(3)
-                print("模型测试完成")
+                print("%s模型输出20条完成"  % file_name)
+            if 'manual' in file_name:
+                print("%s提交20条测试" % file_name)
 
 
     def on_deleted(self, event):

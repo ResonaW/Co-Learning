@@ -2,3 +2,7 @@
 2022-09-17 18:25:29 circus[97290] [INFO] Arbiter now waiting for commands
 2022-09-17 18:25:29 circus[97290] [INFO] webapp started
 2022-09-17 18:27:15 circus[97290] [INFO] webapp stopped
+2022-09-20 16:31:42 circus[5566] [INFO] Starting master on pid 5566
+2022-09-20 16:31:42 circus[5566] [ERROR] exception Address already in use caught
+2022-09-20 19:32:47 circus[34630] [INFO] Starting master on pid 34630
+2022-09-20 19:32:47 circus[34630] [ERROR] exception Address already in use caught

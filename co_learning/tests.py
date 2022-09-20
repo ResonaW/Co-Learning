@@ -4,8 +4,14 @@ from . import *
 
 class PlayerBot(Bot):
     def play_round(self):
+        group_id = get_group_id(self.player.id_in_group)
         if self.round_number == 1:
-            yield Introduction, dict(test=25)
+            if group_id in ['A','D']:
+                yield Introduction, dict(test=25)
+            if group_id in ['B','E']:
+                yield Introduction, dict(test=28)
+            if group_id in ['C','F']:
+                yield Introduction, dict(test=24.5)
         if self.round_number <= 100:
             yield MyPage, dict(sen_result="1")
         if self.round_number == 100:
@@ -15,9 +21,10 @@ class PlayerBot(Bot):
             yield MyTest, dict(sen_result="1")
         if self.round_number == 50:
             yield MyAC, dict(ac_result="0")
+        if self.round_number % 20 == 0 and self.round_number < 100:
+            yield RestPage
         if self.round_number == 120:
             time.sleep(10)
-            group_id = get_group_id(self.player.id_in_group)
             if group_id == "A" or group_id == 'B' or group_id == 'C':
                 yield (
                     ExitSurveyPage,

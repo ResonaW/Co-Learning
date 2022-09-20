@@ -3,10 +3,9 @@ import pandas as pd
 import time
 import os
 import numpy as np
+import random
 
-doc = """
-Your app description
-"""
+doc = """Co-Learning"""
 
 def get_group_id(id_in_group):
     '''A,D AI+人; B,E 人; C,F 机器+一致性'''
@@ -97,7 +96,11 @@ class Player(BasePlayer):
     test = models.FloatField(
         label='在下面的输入框中给出你的答案，只有正确计算出薪酬才能开始接下来的标注任务',
     )
-    player_data = [pd.DataFrame(columns=["content", "round", "result","id","group"]) for x in range(c.PLAYERS_PER_GROUP)]
+    player_data = [pd.DataFrame(columns=["ID","content", "round", "result","id","group"]) for _ in range(c.PLAYERS_PER_GROUP)]
+    random_list = [[i for i in range(100)] for _ in range(100)]
+    for i in range(100):
+        random.shuffle(random_list[i])
+    random_show = [random]
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
     score = models.IntegerField()
     sen_result = models.IntegerField()
@@ -163,28 +166,30 @@ class MyPage(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        r_data = player.df.loc[r_num-1].tolist()
+        r_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
         group_id = get_group_id(player.id_in_group)
         return dict(
             ID=r_num,
             group_id = group_id,
             content_weibo=r_data[1],
             predict_weibo_sen = r_data[2],
-            image_path='lime_imgs/lime_exp{}.png'.format(int(r_num)-1),
+            image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
             )
     @staticmethod
     def before_next_page(player, timeout_happened):
-        round_num = player.round_number
-        round_data = player.df.loc[round_num - 1].tolist()
+        r_num = player.round_number
+        ID = player.random_list[player.id_in_group-1][r_num-1]
+        round_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
         round_content = round_data[1]
         round_result = player.sen_result
         group_id = get_group_id(player.id_in_group)
         current_df = player.player_data[player.id_in_group-1]
-        current_df.loc[len(current_df)] = [round_content,round_num,round_result,player.id_in_group,group_id]
-        if round_num == 100:
-            tmp_df = current_df.rename({'content':'标题/微博内容'},axis=1)
-            tmp_df['label'] = tmp_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
-            tmp_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
+        current_df.loc[len(current_df)] = [ID,round_content,r_num,round_result,player.id_in_group,group_id]
+        if r_num == 100:
+            current_df = current_df.rename({'content':'标题/微博内容'},axis=1)
+            current_df['label'] = current_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
+            current_df = current_df.sort_values(by='ID',ascending=True)
+            current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
     def is_displayed(player):
         return player.round_number <= 100
 
@@ -194,8 +199,7 @@ class MyTest(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        r_data_0 = player.df.loc[r_num-1]
-        r_data = r_data_0.tolist()
+        r_data = player.df.loc[r_num-1].tolist()
         return dict(
             ID=r_num-100,
             content_weibo=r_data[1],
@@ -203,18 +207,19 @@ class MyTest(Page):
         )
     @staticmethod
     def before_next_page(player, timeout_happened):
-        round_num = player.round_number
-        round_data = player.df.loc[round_num - 1].tolist()
+        r_num = player.round_number
+        round_data = player.df.loc[r_num-1].tolist()
         round_content = round_data[1]
         round_result = player.sen_result
         group_id = get_group_id(player.id_in_group)
         current_df = player.player_data[player.id_in_group-1]
-        current_df.loc[len(current_df)] = [round_content,round_num,round_result,player.id_in_group,group_id]
-        if round_num == 120:
-            tmp_df = current_df.rename({'content':'标题/微博内容'},axis=1)
-            tmp_df['label'] = tmp_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
-            tmp_df = tmp_df.iloc[-20:,:]
-            tmp_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group,group_id), index=False)
+        current_df.loc[len(current_df)] = [r_num-1,round_content,r_num,round_result,player.id_in_group,group_id]
+        if r_num == 120:
+            current_df = current_df.rename({'content':'标题/微博内容'},axis=1)
+            current_df['label'] = current_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
+            current_df = current_df.iloc[-20:,:]
+            current_df = current_df.sort_values(by='ID',ascending=True)
+            current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group,group_id), index=False)
     def is_displayed(player):
         return player.round_number > 100
 
@@ -309,7 +314,6 @@ class RewardPage(Page):
         player.player_data[player.id_in_group-1] = None
         return dict( reward=reward )
 
-#新加进来的部分！！0916
 class RestPage(Page):
     form_model = 'player'
     def is_displayed(player):
@@ -321,4 +325,4 @@ class RestPage(Page):
         )
 
 
-page_sequence = [Introduction,MyPage,ResultWaitPage,MyTest,MyAC,ExitSurveyPage,RewardPage]
+page_sequence = [Introduction,MyPage,ResultWaitPage,MyTest,MyAC,RestPage,ExitSurveyPage,RewardPage]
