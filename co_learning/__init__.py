@@ -8,28 +8,42 @@ doc = """
 Your app description
 """
 
+def get_group_id(id_in_group):
+    '''A,D AI+人; B,E 人; C,F 机器+一致性'''
+    if (id_in_group - 1) % 6 == 0:
+        sort = 'A'
+    elif (id_in_group - 2) % 6 == 0:
+        sort = 'B'
+    elif (id_in_group - 3) % 6 == 0:
+        sort = 'C'
+    elif (id_in_group - 4) % 6 == 0:
+        sort = 'D'
+    elif (id_in_group - 5) % 6 == 0:
+        sort = 'E'
+    elif (id_in_group - 6) % 6 == 0:
+        sort = 'F'
+    else:
+        return None
+    return sort
+
 class Bonus():
     
     def __init__(self, id_in_group, group_id) -> None:
         self.id_in_group =  id_in_group
         self.group_id = group_id
         self.flag = False
-        # self.SUFFIX_MODEL = '_test_model'
-        # self.SUFFIX_MANUAL = '_test_manual'
-        # 真实标签待修改
         self.TRUE_LABELS = [1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1]
         self.CSV_PATH = '/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'
-        # 可以进一步修改
+        self.manual_csv_name = self.CSV_PATH+"%d_%s_test_manual.csv" % (self.id_in_group,self.group_id)
+        self.model_csv_name = self.CSV_PATH+"%d_%s_test_model.csv" % (self.id_in_group,self.group_id)
 
     def manual_csv_name_check(self):
-        manual_csv_name = self.CSV_PATH+"%d_%s_test_manual.csv" % (self.id_in_group,self.group_id)
-        while not os.path.exists(manual_csv_name):
+        while not os.path.exists(self.manual_csv_name):
             time.sleep(1)
         self.flag = True
 
     def model_csv_name_check(self):
-        model_csv_name = self.CSV_PATH+"%d_%s_test_model.csv" % (self.id_in_group,self.group_id)
-        while not os.path.exists(model_csv_name):
+        while not os.path.exists(self.model_csv_name):
             time.sleep(1)
         self.flag = True
     
@@ -38,29 +52,31 @@ class Bonus():
         return n1.tolist().count(0)
 
     def calculate_bonus(self):
-        manual_csv_name = self.CSV_PATH+"%d_%s_test_manual.csv" % (self.id_in_group,self.group_id)
-        model_csv_name = self.CSV_PATH+"%d_%s_test_model.csv" % (self.id_in_group,self.group_id)
-        if self.group_id == 'B':
-            manual_df = pd.read_csv(manual_csv_name)
+        if self.group_id in ['B','E']:
+            manual_df = pd.read_csv(self.manual_csv_name)
             human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
             salary = 10+human_correct*2-(20-human_correct)*1
             return salary
 
-        if self.group_id == 'A':
-            manual_df = pd.read_csv(manual_csv_name)
-            model_df = pd.read_csv(model_csv_name)
+        if self.group_id in ['A','D']:
+            manual_df = pd.read_csv(self.manual_csv_name)
+            model_df = pd.read_csv(self.model_csv_name)
             human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
             AI_correct = self.correct_count(model_df['label'].to_list(),self.TRUE_LABELS)
+            # print(human_correct,AI_correct)
             salary = 10+human_correct*1-(20-human_correct)*0.5+AI_correct*1-(20-AI_correct)*0.5
             return salary
 
-        if self.group_id == 'C':
-            manual_df = pd.read_csv(manual_csv_name)
-            model_df = pd.read_csv(model_csv_name)
+        if self.group_id in ['C','F']:
+            manual_df = pd.read_csv(self.manual_csv_name)
+            model_df = pd.read_csv(self.model_csv_name)
             human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
             human_AI_consistency_right = self.correct_count(model_df['label'].to_list(),manual_df['label'].to_list())
             salary = 10 + human_correct * 1 - (20 - human_correct) * 0.5 +human_AI_consistency_right*1-(20-human_AI_consistency_right)*0.5
             return salary
+        
+        else:
+            print(self.group_id)
 
 class C(BaseConstants):
     NAME_IN_URL = 'co_learning'
@@ -147,29 +163,14 @@ class MyPage(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        r_data_0 = player.df.loc[r_num-1]
-        r_data = r_data_0.tolist()
-        id = player.id_in_group
-        if id % 6 == 0:
-            sort = 'F'
-        elif (id - 1) % 6 == 0 or id == 1:
-            sort = 'A'
-        elif (id - 2) % 6 == 0 or id == 2:
-            sort = 'B'
-        elif (id - 3) % 6 == 0 or id == 3:
-            sort = 'C'
-        elif (id - 4) % 6 == 0 or id == 4:
-            sort = 'D'
-        elif (id - 5) % 6 == 0 or id == 5:
-            sort = 'E'
+        r_data = player.df.loc[r_num-1].tolist()
+        group_id = get_group_id(player.id_in_group)
         return dict(
             ID=r_num,
-            group_id = sort,
+            group_id = group_id,
             content_weibo=r_data[1],
             predict_weibo_sen = r_data[2],
-            # 把图片读进网页,路径待修改
             image_path='lime_imgs/lime_exp{}.png'.format(int(r_num)-1),
-            label=sort
             )
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -177,25 +178,13 @@ class MyPage(Page):
         round_data = player.df.loc[round_num - 1].tolist()
         round_content = round_data[1]
         round_result = player.sen_result
-        id = player.id_in_group
-        if id % 6 == 0:
-            sort = 'F'
-        elif (id - 1) % 6 == 0 or id == 1:
-            sort = 'A'
-        elif (id - 2) % 6 == 0 or id == 2:
-            sort = 'B'
-        elif (id - 3) % 6 == 0 or id == 3:
-            sort = 'C'
-        elif (id - 4) % 6 == 0 or id == 4:
-            sort = 'D'
-        elif (id - 5) % 6 == 0 or id == 5:
-            sort = 'E'
+        group_id = get_group_id(player.id_in_group)
         current_df = player.player_data[player.id_in_group-1]
-        current_df.loc[len(current_df)] = [round_content,round_num,round_result,player.id_in_group,sort]
+        current_df.loc[len(current_df)] = [round_content,round_num,round_result,player.id_in_group,group_id]
         if round_num == 100:
             tmp_df = current_df.rename({'content':'标题/微博内容'},axis=1)
             tmp_df['label'] = tmp_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
-            tmp_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,sort),index=False)
+            tmp_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
     def is_displayed(player):
         return player.round_number <= 100
 
@@ -218,26 +207,14 @@ class MyTest(Page):
         round_data = player.df.loc[round_num - 1].tolist()
         round_content = round_data[1]
         round_result = player.sen_result
-        id = player.id_in_group
-        if id % 6 == 0:
-            sort = 'F'
-        elif (id - 1) % 6 == 0 or id == 1:
-            sort = 'A'
-        elif (id - 2) % 6 == 0 or id == 2:
-            sort = 'B'
-        elif (id - 3) % 6 == 0 or id == 3:
-            sort = 'C'
-        elif (id - 4) % 6 == 0 or id == 4:
-            sort = 'D'
-        elif (id - 5) % 6 == 0 or id == 5:
-            sort = 'E'
+        group_id = get_group_id(player.id_in_group)
         current_df = player.player_data[player.id_in_group-1]
-        current_df.loc[len(current_df)] = [round_content,round_num,round_result,player.id_in_group,sort]
+        current_df.loc[len(current_df)] = [round_content,round_num,round_result,player.id_in_group,group_id]
         if round_num == 120:
             tmp_df = current_df.rename({'content':'标题/微博内容'},axis=1)
             tmp_df['label'] = tmp_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
             tmp_df = tmp_df.iloc[-20:,:]
-            tmp_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group,sort), index=False)
+            tmp_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group,group_id), index=False)
     def is_displayed(player):
         return player.round_number > 100
 
@@ -247,57 +224,27 @@ class MyAC(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        r_data_0 = player.df.loc[r_num-1]
-        r_data = r_data_0.tolist()
-        return dict(
-            ID=r_data[0],
-            content_weibo=r_data[1],
-            predict_weibo_sen = r_data[2]
-        )
+        return dict(ID=r_num)
     @staticmethod
     def before_next_page(player, timeout_happened):
         round_num = player.round_number
-        id = player.id_in_group
         if round_num == 50:
             round_result = player.ac_result
-            if id % 6 == 0:
-                sort = 'F'
-            elif (id - 1) % 6 == 0 or id == 1:
-                sort = 'A'
-            elif (id - 2) % 6 == 0 or id == 2:
-                sort = 'B'
-            elif (id - 3) % 6 == 0 or id == 3:
-                sort = 'C'
-            elif (id - 4) % 6 == 0 or id == 4:
-                sort = 'D'
-            elif (id - 5) % 6 == 0 or id == 5:
-                sort = 'E'
-            player.player_ac.loc[len(player.player_ac.index)] = [round_num,round_result,player.id_in_group,sort]
+            group_id = get_group_id(player.id_in_group)
+            player.player_ac.loc[len(player.player_ac.index)] = [round_num,round_result,player.id_in_group,group_id]
             player.player_ac.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/attention_check/attention_check.csv", index=False)
     def is_displayed(player):
         return player.round_number == 50
 
-class exit_survey(Page):
+class ExitSurveyPage(Page):
     form_model = 'player'
     form_fields = ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6','advice']
     @staticmethod
     def get_form_fields(player):
-        id = player.id_in_group
-        if id % 6 == 0:
-            sort = 'F'
-        elif (id - 1) % 6 == 0 or id == 1:
-            sort = 'A'
-        elif (id - 2) % 6 == 0 or id == 2:
-            sort = 'B'
-        elif (id - 3) % 6 == 0 or id == 3:
-            sort = 'C'
-        elif (id - 4) % 6 == 0 or id == 4:
-            sort = 'D'
-        elif (id - 5) % 6 == 0 or id == 5:
-            sort = 'E'
-        if sort == "A" or sort == 'B' or sort == 'C':
+        group_id = get_group_id(player.id_in_group)
+        if group_id == "A" or group_id == 'B' or group_id == 'C':
             return ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q8",'advice']
-        elif sort == "C" or sort == 'D' or sort == 'E':
+        elif group_id == "C" or group_id == 'D' or group_id == 'E':
             return ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q7","Q8",'advice']
     @staticmethod
     def vars_for_template(player):
@@ -307,24 +254,12 @@ class exit_survey(Page):
         return player.round_number == 120
     @staticmethod
     def before_next_page(player, timeout_happened):
-        id = player.id_in_group
-        if id % 6 == 0:
-            sort = 'F'
-        elif (id - 1) % 6 == 0 or id == 1:
-            sort = 'A'
-        elif (id - 2) % 6 == 0 or id == 2:
-            sort = 'B'
-        elif (id - 3) % 6 == 0 or id == 3:
-            sort = 'C'
-        elif (id - 4) % 6 == 0 or id == 4:
-            sort = 'D'
-        elif (id - 5) % 6 == 0 or id == 5:
-            sort = 'E'
-        bonus = Bonus(id_in_group=id,group_id=sort)
-        if sort=='A':
+        group_id = get_group_id(player.id_in_group)
+        bonus = Bonus(id_in_group=player.id_in_group,group_id=group_id)
+        if group_id in ['A','D']:
             while not bonus.flag:
                 bonus.manual_csv_name_check()
-        elif sort=='B' or sort=='C':
+        elif group_id in ['B','C','E','F']:
             while not bonus.flag:
                 bonus.model_csv_name_check()
         
@@ -336,35 +271,23 @@ class Introduction(Page):
         return player.round_number == 1
     @staticmethod
     def error_message(player, values):
-        id = player.id_in_group
-        if id % 6 == 0 or (id - 3) % 6 == 0 or id == 3:
+        group_id = get_group_id(player.id_in_group)
+        if group_id in ['C','F']:
             print('你的答案是', values)
             if values['test'] != 24.5:
                 return '你计算的薪酬有误，再重新想想吧！'
-        elif (id - 1) % 6 == 0 or id == 1 or (id - 4) % 6 == 0 or id == 4:
+        elif group_id in ['A','D']:
             print('你的答案是', values)
             if values['test'] != 25:
                 return '你计算的薪酬有误，再重新想想吧！'
-        elif (id - 2) % 6 == 0 or id == 5 or (id - 5) % 6 == 0 or id == 2:
+        elif group_id in ['B','E']:
             print('你的答案是', values)
             if values['test'] != 28:
                 return '你计算的薪酬有误，再重新想想吧！'
     @staticmethod
     def vars_for_template(player):
-        id = player.id_in_group
-        if id % 6 == 0:
-            sort = 'F'
-        elif (id - 1) % 6 == 0 or id == 1:
-            sort = 'A'
-        elif (id - 2) % 6 == 0 or id == 2:
-            sort = 'B'
-        elif (id - 3) % 6 == 0 or id == 3:
-            sort = 'C'
-        elif (id - 4) % 6 == 0 or id == 4:
-            sort = 'D'
-        elif (id - 5) % 6 == 0 or id == 5:
-            sort = 'E'
-        return dict(id=sort)
+        group_id = get_group_id(player.id_in_group)
+        return dict(id=group_id)
 
 class ResultWaitPage(Page):
     form_model = 'player'
@@ -372,34 +295,22 @@ class ResultWaitPage(Page):
     def is_displayed(player):
         return player.round_number == 100
 
-class reward(Page):
+class RewardPage(Page):
     form_model = 'player'
     @staticmethod
     def is_displayed(player):
         return player.round_number == 120
     @staticmethod
     def vars_for_template(player):
-        id = player.id_in_group
-        if id % 6 == 0:
-            sort = 'F'
-        elif (id - 1) % 6 == 0 or id == 1:
-            sort = 'A'
-        elif (id - 2) % 6 == 0 or id == 2:
-            sort = 'B'
-        elif (id - 3) % 6 == 0 or id == 3:
-            sort = 'C'
-        elif (id - 4) % 6 == 0 or id == 4:
-            sort = 'D'
-        elif (id - 5) % 6 == 0 or id == 5:
-            sort = 'E'
-        bonus = Bonus(id_in_group=id,group_id=sort)
+        group_id = get_group_id(player.id_in_group)
+        bonus = Bonus(id_in_group=player.id_in_group,group_id=group_id)
         reward = bonus.calculate_bonus()
         # 清除数据
         player.player_data[player.id_in_group-1] = None
         return dict( reward=reward )
 
 #新加进来的部分！！0916
-class xiuxi(Page):
+class RestPage(Page):
     form_model = 'player'
     def is_displayed(player):
         return player.round_number % 20 == 0 and player.round_number < 100
@@ -410,4 +321,4 @@ class xiuxi(Page):
         )
 
 
-page_sequence = [Introduction,MyPage,ResultWaitPage,MyTest,MyAC,exit_survey,reward]
+page_sequence = [Introduction,MyPage,ResultWaitPage,MyTest,MyAC,ExitSurveyPage,RewardPage]

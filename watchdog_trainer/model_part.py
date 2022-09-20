@@ -23,21 +23,23 @@ class FileEventHandler(FileSystemEventHandler):
         pass
 
     def on_moved(self, event):
-        if event.is_directory:
-            print("directory moved from {0} to {1}".format(event.src_path,event.dest_path))
-        else:
-            print("file moved from {0} to {1}".format(event.src_path,event.dest_path))
+        pass
+        # if event.is_directory:
+        #     print("directory moved from {0} to {1}".format(event.src_path,event.dest_path))
+        # else:
+        #     print("file moved from {0} to {1}".format(event.src_path,event.dest_path))
 
     def on_created(self, event):
         if event.is_directory:
-            print("directory created:{0}".format(event.src_path))
+            # print("directory created:{0}".format(event.src_path))
+            pass
         else:
             # 新出现的csv文件，进行模型训练和预测
-            print("新生成了文件")
-            print("file created:{0}".format(event.src_path))
+            # print("file created:{0}".format(event.src_path))
             file_name = re.search('(\w+)\.csv',event.src_path).group(1)
+            print(file_name)
             if (file_name not in self.log_list) and ('manual' not in file_name):
-                print("用户有新提交")
+                print("用户有100条新提交")
                 self.log_list.append(file_name)
                 # 模型训练阶段
                 time.sleep(3)
@@ -53,19 +55,22 @@ class FileEventHandler(FileSystemEventHandler):
                 self.log_list.append(csv_name)
                 test_df_model.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'+csv_name+'.csv',index=False)
                 time.sleep(3)
+                print("模型测试完成")
 
 
     def on_deleted(self, event):
-        if event.is_directory:
-            print("directory deleted:{0}".format(event.src_path))
-        else:
-            print("file deleted:{0}".format(event.src_path))
+        pass
+        # if event.is_directory:
+        #     print("directory deleted:{0}".format(event.src_path))
+        # else:
+        #     print("file deleted:{0}".format(event.src_path))
 
     def on_modified(self, event):
-        if event.is_directory:
-            print("directory modified:{0}".format(event.src_path))
-        else:
-            print("file modified:{0}".format(event.src_path))
+        pass
+        # if event.is_directory:
+        #     print("directory modified:{0}".format(event.src_path))
+        # else:
+        #     print("file modified:{0}".format(event.src_path))
 
 if __name__ == "__main__":
     import time
