@@ -1,0 +1,4 @@
+2022-09-17 18:25:29 circus[97290] [INFO] Starting master on pid 97290
+2022-09-17 18:25:29 circus[97290] [INFO] Arbiter now waiting for commands
+2022-09-17 18:25:29 circus[97290] [INFO] webapp started
+2022-09-17 18:27:15 circus[97290] [INFO] webapp stopped

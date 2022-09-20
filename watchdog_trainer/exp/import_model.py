@@ -17,12 +17,12 @@ def import_model(path=None):
         # for root, dirs, _ in os.walk('./models/', topdown=False):
         #     dirs_list.append(dirs)
         # latest_dir = root + '/' + max(dirs_list)
-        model = AutoModelForSequenceClassification.from_pretrained("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/models/2022-09-07-19-51", num_labels=2).to("cuda")
+        model = AutoModelForSequenceClassification.from_pretrained("/home/ubuntu/Otree_Project/models/online_shopping_dataset_60model", num_labels=2).to("cuda")
     return model
 
 def import_tokenizer(path=None):
     if path is not None:
         tokenizer = AutoTokenizer.from_pretrained(path)
     else:
-        tokenizer = AutoTokenizer.from_pretrained('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/models/2022-09-07-19-51')
+        tokenizer = AutoTokenizer.from_pretrained('/home/ubuntu/Otree_Project/models/online_shopping_dataset_60model')
     return tokenizer

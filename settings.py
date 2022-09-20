@@ -6,6 +6,7 @@ SESSION_CONFIGS = [
         display_name="co_learning",
         app_sequence=['co_learning'],
         num_demo_participants=30,
+        use_browser_bots=True
     ),
 ]
 
