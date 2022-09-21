@@ -98,7 +98,7 @@ if __name__ == "__main__":
     event_handler = FileEventHandler(model=model, tokenizer=tokenizer, test_dataset=test_dataset)
     observer.schedule(event_handler, "/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/", True)
     observer.start()
-    print("all things are ready.")
+    print("-----Ready-----")
     try:
         while True:
             time.sleep(1)

@@ -107,6 +107,9 @@
                 <br>
                 <h1>AI模型认为此条评论所属的标签类别为：<span1>“{{ predict_weibo_sen }}”</span1></h1>
                 {{ if group_id == "D" or group_id == "E" or group_id == "F" }}
+                <h1>以下为AI模型对此条评论各部分的判断:</h1>
+                <h1>橙色代表AI认为此部分文本为积极，蓝色部分代表AI认为此部分为消极</h1>
+                <h1>颜色越深，程度越高</h1>
                 <h1><img src="{{ static image_path }}" /></h1>
                 {{ elif group_id == "A" or group_id == "B" or group_id == "C" }}
                 <br>
