@@ -9,6 +9,7 @@ import re
 import pandas as pd
 import time
 import shutil
+from datetime import datetime
 
 def delete_folder_content(folder):
     for filename in os.listdir(folder):
@@ -32,17 +33,13 @@ class FileEventHandler(FileSystemEventHandler):
         self.test_dataset = test_dataset
         self.model = model
         self.tokenizer = tokenizer
-        self.log_list = []
+        self.log_df = pd.read_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv')
 
     def on_any_event(self, event):
         pass
 
     def on_moved(self, event):
         pass
-        # if event.is_directory:
-        #     print("directory moved from {0} to {1}".format(event.src_path,event.dest_path))
-        # else:
-        #     print("file moved from {0} to {1}".format(event.src_path,event.dest_path))
 
     def on_created(self, event):
         if event.is_directory:
@@ -52,9 +49,10 @@ class FileEventHandler(FileSystemEventHandler):
             # 新出现的csv文件，进行模型训练和预测
             # print("file created:{0}".format(event.src_path))
             file_name = re.search('(\w+)\.csv',event.src_path).group(1)
-            if (file_name not in self.log_list) and ('manual' not in file_name):
+            if (file_name not in self.log_df['logging'].to_list()) and ('manual' not in file_name):
                 print("%s提交100条训练" % file_name)
-                self.log_list.append(file_name)
+                self.log_df.loc[len(self.log_df)] = [file_name,str(datetime.now())]
+                log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
                 # 模型训练阶段
                 time.sleep(3)
                 train_df = pd.read_csv(event.src_path)
@@ -66,33 +64,30 @@ class FileEventHandler(FileSystemEventHandler):
                 test_df_model = pd.DataFrame()
                 test_df_model['label'] = labels
                 csv_name = file_name + '_test_model'
-                self.log_list.append(csv_name)
+                self.log_df.loc[len(self.log_df)] = [file_name,str(datetime.now())]
+                log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
                 test_df_model.to_csv(self.target_path+csv_name+'.csv',index=False)
                 time.sleep(3)
                 print("%s模型输出20条完成"  % file_name)
             if 'manual' in file_name:
+                self.log_df.loc[len(self.log_df)] = [file_name,str(datetime.now())]
+                log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
                 print("%s提交20条测试" % file_name)
 
 
     def on_deleted(self, event):
         pass
-        # if event.is_directory:
-        #     print("directory deleted:{0}".format(event.src_path))
-        # else:
-        #     print("file deleted:{0}".format(event.src_path))
 
     def on_modified(self, event):
         pass
-        # if event.is_directory:
-        #     print("directory modified:{0}".format(event.src_path))
-        # else:
-        #     print("file modified:{0}".format(event.src_path))
 
 if __name__ == "__main__":
     import time
     model = import_model()
     tokenizer = import_tokenizer()
     test_df = import_dataset()
+    log_df = pd.DataFrame(columns=['logging','time'])
+    log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
     test_dataset = My_Dataset(test_df, tokenizer)
     observer = Observer()
     event_handler = FileEventHandler(model=model, tokenizer=tokenizer, test_dataset=test_dataset)
