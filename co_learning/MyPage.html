@@ -6,6 +6,29 @@
         <meta charset="utf-8">
         <title>Human-AI Co-Learning</title>
         <style>
+            .first {
+                width: 33.3%;
+                float:left;
+                height: 100px;
+                /* border: 1px solid #3B6273; */
+                /* border-radius:25px; */
+            }
+            .second {
+                width: 33.3%;
+                float:left;
+                height: 100px;
+                /* border: 1px solid #3B6273; */
+                /* border-radius:25px; */
+            }
+            .third {
+                width: 33.3%;
+                float:left;
+                height: 100px;
+                /* border: 1px solid #3B6273; */
+                /* border-radius:25px; */
+            }
+        </style>
+        <style>
              @import url(http://fonts.googleapis.com/css?family=Lato:400,700,900);
             .form {
             }
@@ -129,6 +152,29 @@
             <div class="column">
                 <input type="radio" name="place1" value="0" /><span2 style="font-size: 20px color= #000">  消极</span>
             </div>
+        </div>
+        <br>
+        <br>
+        <div class="first"> 
+            <div align="center">  
+                <br>
+                {{ formfield 'AI_confidence' }} 
+                <br>
+            </div> 
+        </div>
+        <div class="second"> 
+            <div align="center">  
+                <br>
+                {{ formfield 'Human_confidence' }} 
+                <br>
+            </div> 
+        </div>
+        <div class="third"> 
+            <div align="center">  
+                <br>
+                {{ formfield 'change_sample' }} 
+                <br>
+            </div> 
         </div>
         <br>
         <br>
