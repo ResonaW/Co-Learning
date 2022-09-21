@@ -157,6 +157,19 @@ class Player(BasePlayer):
         choices=[['1', '第一种'], ['2', '第二种'], ['3', '第三种']]
     )
     advice = models.StringField(label="您是否有其它的建议或意见，或者谈谈您对实验的感受？")
+#     添加收集对AI预测结果以及自己判断的信心
+    AI_confidence = models.IntegerField(
+        label='请选择你对AI的信任程度，数字越大信任程度越高',
+        choices=[1, 2, 3, 4, 5]
+    )
+    Human_confidence = models.IntegerField(
+        label='请选择你对自己答案的自信程度，数字越大信任程度越高',
+        choices=[1, 2, 3, 4, 5]
+    )
+    change_sample = models.IntegerField(
+        label='你可以选择是否将这一样本给AI进行学习，如果选择否我们将给你准备一个新的样本',
+        choices=[['1', '是'], ['2', '否']]
+    )
 
 # PAGES
 '''介绍界面'''
@@ -189,7 +202,7 @@ class Introduction(Page):
 '''预测100条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
-    form_fields = ['sen_result']
+    form_fields = ['sen_result','AI_confidence','Human_confidence','change_sample']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
@@ -225,7 +238,7 @@ class MyPage(Page):
 '''Attention Check页面'''
 class MyAC(Page):
     form_model = 'player'
-    form_fields = ['ac_result']
+    form_fields = ['ac_result','AI_confidence','Human_confidence','change_sample']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
