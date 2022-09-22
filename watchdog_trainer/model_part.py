@@ -49,7 +49,7 @@ class FileEventHandler(FileSystemEventHandler):
             # 新出现的csv文件，进行模型训练和预测
             # print("file created:{0}".format(event.src_path))
             file_name = re.search('(\w+)\.csv',event.src_path).group(1)
-            if (file_name not in self.log_df['logging'].to_list()) and ('manual' not in file_name):
+            if (file_name not in self.log_list) and ('manual' not in file_name):
                 print("%s提交100条训练" % file_name)
                 self.log_list.append(file_name)
                 # 模型训练阶段
@@ -63,14 +63,12 @@ class FileEventHandler(FileSystemEventHandler):
                 test_df_model = pd.DataFrame()
                 test_df_model['label'] = labels
                 csv_name = file_name + '_test_model'
-                self.log_df.loc[len(self.log_df)] = [file_name,str(datetime.now())]
-                log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
+                self.log_list.append(file_name)
                 test_df_model.to_csv(self.target_path+csv_name+'.csv',index=False)
                 time.sleep(3)
                 print("%s模型输出20条完成"  % file_name)
             if 'manual' in file_name:
-                self.log_df.loc[len(self.log_df)] = [file_name,str(datetime.now())]
-                log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
+                self.log_list.append(file_name)
                 print("%s提交20条测试" % file_name)
 
 
@@ -96,4 +94,7 @@ if __name__ == "__main__":
             time.sleep(1)
 
     except KeyboardInterrupt:
+        with open(r'/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.txt','w',encoding='utf-8') as f:
+            f.writelines(event_handler.log_list)
+            f.close()
         observer.stop()
