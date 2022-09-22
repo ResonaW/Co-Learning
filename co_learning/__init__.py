@@ -165,7 +165,6 @@ class Player(BasePlayer):
     AI_confidence = models.IntegerField()
     Human_confidence = models.IntegerField()
 
-
 # PAGES
 '''介绍界面'''
 class Introduction(Page):
