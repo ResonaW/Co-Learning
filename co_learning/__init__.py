@@ -164,12 +164,7 @@ class Player(BasePlayer):
 #     添加收集对AI预测结果以及自己判断的信心
     AI_confidence = models.IntegerField()
     Human_confidence = models.IntegerField()
-    # AI_confidence_ac = models.IntegerField()
-    # Human_confidence_ac = models.IntegerField()
-    change_sample = models.IntegerField(
-        label='你可以选择是否将这一样本给AI进行学习，如果选择否我们将给你准备一个新的样本',
-        choices=[['1', '是'], ['2', '否']]
-    )
+
 
 # PAGES
 '''介绍界面'''
