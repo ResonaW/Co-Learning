@@ -93,7 +93,7 @@ class Player(BasePlayer):
         label='在下面的输入框中给出你的答案，只有正确计算出薪酬才能开始接下来的标注任务',
     )
     # 用户情感判断结果dataframe列表
-    player_data = [pd.DataFrame(columns=["ID","text", "round", "result","id","group","change","AI_confidence","Human_confidence"]) for _ in range(c.PLAYERS_PER_GROUP)]
+    player_data = [pd.DataFrame(columns=["ID","text", "round", "label", "id","group","change","AI_confidence","Human_confidence"]) for _ in range(c.PLAYERS_PER_GROUP)]
     # 随机文本展示
     random_list = [[i for i in range(100)] for _ in range(100)]
     for i in range(100):
@@ -228,7 +228,6 @@ class MyPage(Page):
         current_df = player.player_data[player.id_in_group-1]
         current_df.loc[len(current_df)] = [ID,round_content,r_num,round_result,player.id_in_group,group_id,train_change,AI_confidence,Human_confidence]
         if r_num == 100:
-            current_df['label'] = current_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
             current_df = current_df.sort_values(by='ID',ascending=True)
             current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
     @staticmethod
@@ -280,7 +279,6 @@ class MyTest(Page):
         current_df = player.player_data[player.id_in_group-1]
         current_df.loc[len(current_df)] = [r_num-1,round_content,r_num,round_result,player.id_in_group,group_id,None,None,None]
         if r_num == 120:
-            current_df['label'] = current_df['result'].apply(lambda x:1 if str(x)=='111' else 0)
             current_df = current_df.iloc[-20:,:]
             current_df = current_df.sort_values(by='ID',ascending=True)
             current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group,group_id), index=False)

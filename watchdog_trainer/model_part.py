@@ -63,7 +63,7 @@ class FileEventHandler(FileSystemEventHandler):
                 test_df_model = pd.DataFrame()
                 test_df_model['label'] = labels
                 csv_name = file_name + '_test_model'
-                self.log_list.append(file_name)
+                self.log_list.append(csv_name)
                 test_df_model.to_csv(self.target_path+csv_name+'.csv',index=False)
                 time.sleep(3)
                 print("%s模型输出20条完成"  % file_name)
