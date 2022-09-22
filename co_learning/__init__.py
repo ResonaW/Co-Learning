@@ -77,6 +77,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = 30
     NUM_ROUNDS = 120
     file=pd.read_excel("/home/ubuntu/Otree_Project/Co-Learning/co_learning/dataset.xlsx")
+    file_spare = pd.read_excel('/home/ubuntu/Otree_Project/Co-Learning/co_learning/spare_dataset.xlsx')
 
 class Subsession(BaseSubsession):
     pass
@@ -88,6 +89,7 @@ class Player(BasePlayer):
     c=C()
     # 训练集dataframe
     df=c.file
+    df_spare = c.file_spare
     # 计算报酬问题
     test = models.FloatField(
         label='在下面的输入框中给出你的答案，只有正确计算出薪酬才能开始接下来的标注任务',
@@ -211,9 +213,9 @@ class MyPage(Page):
             image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
             icon_path='starIcon.png',
             # 备用的样本参数,读入数据后写进这个地方
-            image_path_spare="",
-            content_weibo_spare="",
-            predict_weibo_sen_spare = "",
+            image_path_spare='lime_imgs_spare/lime_exp{}.png'.format(player.change_number),
+            content_weibo_spare=player.df_spare.iloc[player.change_number]['text'],
+            predict_weibo_sen_spare =player.df_spare.iloc[player.change_number]['情感预测'],
             )
     @staticmethod
     def before_next_page(player, timeout_happened):
