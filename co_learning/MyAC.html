@@ -9,21 +9,21 @@
             .first {
                 width: 33.3%;
                 float:left;
-                height: 100px;
+                height: 150px;
                 /* border: 1px solid #3B6273; */
                 /* border-radius:25px; */
             }
             .second {
                 width: 33.3%;
                 float:left;
-                height: 100px;
+                height: 150px;
                 /* border: 1px solid #3B6273; */
                 /* border-radius:25px; */
             }
             .third {
                 width: 33.3%;
                 float:left;
-                height: 100px;
+                height: 150px;
                 /* border: 1px solid #3B6273; */
                 /* border-radius:25px; */
             }
@@ -120,7 +120,7 @@
 <div class="card bg-light m-3">
     <div class="card-body">
         <br>
-    <p>这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请选择“积极”这一选项。</p>
+    <p>这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请为评论情感类别选择“积极”这一选项。其余题目你可以自由进行选择。</p>
     </div>
 </div>
 
@@ -140,26 +140,34 @@
         </div>
         <br>
         <br>
-        <div class="first"> 
-            <div align="center">  
-                <br>
-                {{ formfield 'AI_confidence' }} 
-                <br>
-            </div> 
-        </div>
-        <div class="second"> 
-            <div align="center">  
-                <br>
-                {{ formfield 'Human_confidence' }} 
-                <br>
-            </div> 
-        </div>
-        <div class="third"> 
-            <div align="center">  
-                <br>
-                {{ formfield 'change_sample' }} 
-                <br>
-            </div> 
+        <div>
+            <div class="first"> 
+                <div align="center">  
+                    <br>
+                    {{ formfield 'AI_confidence' }} 
+                    <br>
+                    <br>
+                    <br>
+                </div> 
+            </div>
+            <div class="second"> 
+                <div align="center">  
+                    <br>
+                    {{ formfield 'Human_confidence' }} 
+                    <br>
+                    <br>
+                    <br>
+                </div> 
+            </div>
+            <div class="third"> 
+                <div align="center">  
+                    <br>
+                    {{ formfield 'change_sample' }} 
+                    <br>
+                    <br>
+                    <br>
+                </div> 
+            </div>
         </div>
         <br>
         <br>

@@ -9,23 +9,23 @@
             .first {
                 width: 33.3%;
                 float:left;
-                height: 100px;
-                /* border: 1px solid #3B6273; */
-                /* border-radius:25px; */
+                height: 150px;
+                border: 1px solid #3B6273;
+                border-radius:25px;
             }
             .second {
                 width: 33.3%;
                 float:left;
-                height: 100px;
-                /* border: 1px solid #3B6273; */
-                /* border-radius:25px; */
+                height: 150px;
+                border: 1px solid #3B6273;
+                border-radius:25px;
             }
             .third {
                 width: 33.3%;
                 float:left;
-                height: 100px;
-                /* border: 1px solid #3B6273; */
-                /* border-radius:25px; */
+                height: 150px;
+                border: 1px solid #3B6273;
+                border-radius:25px;
             }
         </style>
         <style>
@@ -130,8 +130,7 @@
                 <h1>AI模型认为此条评论所属的标签类别为：<span1>“{{ predict_weibo_sen }}”</span1></h1>
                 {{ if group_id == "D" or group_id == "E" or group_id == "F" }}
                 <h1>以下为AI模型对此条评论各部分的判断:</h1>
-                <h1>橙色代表AI认为此部分文本为积极，蓝色部分代表AI认为此部分为消极</h1>
-                <h1>颜色越深，程度越高</h1>
+                <h2>橙色代表AI认为此部分文本为积极，蓝色部分代表AI认为此部分为消极，颜色越深程度越高</h2>
                 <h1><img src="{{ static image_path }}" /></h1>
                 {{ elif group_id == "A" or group_id == "B" or group_id == "C" }}
                 <br>
@@ -155,26 +154,34 @@
         </div>
         <br>
         <br>
-        <div class="first"> 
-            <div align="center">  
-                <br>
-                {{ formfield 'AI_confidence' }} 
-                <br>
-            </div> 
-        </div>
-        <div class="second"> 
-            <div align="center">  
-                <br>
-                {{ formfield 'Human_confidence' }} 
-                <br>
-            </div> 
-        </div>
-        <div class="third"> 
-            <div align="center">  
-                <br>
-                {{ formfield 'change_sample' }} 
-                <br>
-            </div> 
+        <div>
+            <div class="first"> 
+                <div align="center">  
+                    <br>
+                    {{ formfield 'AI_confidence' }} 
+                    <br>
+                    <br>
+                    <br>
+                </div> 
+            </div>
+            <div class="second"> 
+                <div align="center">  
+                    <br>
+                    {{ formfield 'Human_confidence' }} 
+                    <br>
+                    <br>
+                    <br>
+                </div> 
+            </div>
+            <div class="third"> 
+                <div align="center">  
+                    <br>
+                    {{ formfield 'change_sample' }} 
+                    <br>
+                    <br>
+                    <br>
+                </div> 
+            </div>
         </div>
         <br>
         <br>
