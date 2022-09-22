@@ -158,14 +158,10 @@ class Player(BasePlayer):
     )
     advice = models.StringField(label="您是否有其它的建议或意见，或者谈谈您对实验的感受？")
 #     添加收集对AI预测结果以及自己判断的信心
-    AI_confidence = models.IntegerField(
-        label='请选择你对AI的信任程度，数字越大信任程度越高',
-        choices=[1, 2, 3, 4, 5]
-    )
-    Human_confidence = models.IntegerField(
-        label='请选择你对自己答案的自信程度，数字越大信任程度越高',
-        choices=[1, 2, 3, 4, 5]
-    )
+    AI_confidence = models.IntegerField()
+    Human_confidence = models.IntegerField()
+    AI_confidence_ac = models.IntegerField()
+    Human_confidence_ac = models.IntegerField()
     change_sample = models.IntegerField(
         label='你可以选择是否将这一样本给AI进行学习，如果选择否我们将给你准备一个新的样本',
         choices=[['1', '是'], ['2', '否']]
@@ -215,6 +211,7 @@ class MyPage(Page):
             predict_weibo_sen = r_data[2],
             # 可解释性导入
             image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
+            icon_path='starIcon.png'
             )
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -243,7 +240,10 @@ class MyAC(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        return dict(ID=r_num)
+        return dict(
+            ID=r_num,
+            icon_path='starIcon.png'
+        )
     @staticmethod
     def before_next_page(player, timeout_happened):
         round_num = player.round_number
