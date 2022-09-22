@@ -9,14 +9,14 @@
             .first {
                 width: 50%;
                 float:left;
-                height: 100px;
+                height: 50px;
                 /* border: 1px solid #3B6273;
                 border-radius:25px; */
             }
             .second {
                 width: 50%;
                 float:left;
-                height: 100px;
+                height: 50px;
                 /* border: 1px solid #3B6273;
                 border-radius:25px; */
             }
@@ -100,6 +100,12 @@
             document.getElementById("AI_confidence").value=AI_confi;
             document.getElementById("Human_confidence").value=human_confi;
         }
+        function changedata(){
+            $('#xalimg').attr('scr','{{ static image_path_spare }}')
+            document.getElementById("content_comment").innerHTML='{{ content_weibo_spare }}';
+            document.getElementById("predict_label").innerHTML='{{ predict_weibo_sen_spare }}';          
+            document.getElementById("change_number").value = document.getElementById("change_number").value + 1 
+        }
     </script>
 </html>
 
@@ -117,18 +123,18 @@
 <div class="card bg-light m-3">
     <div class="card-body">
     <br>
-    <p>{{ content_weibo }}</p>
+    <p id="content_comment">{{ content_weibo }}</p>
     </div>
 </div>
     <div class="form">
         <header>
             <div style="border-style:dashed;border-radius:25px;">
                 <br>
-                <h1>AI模型认为此条评论所属的标签类别为：<span1>“{{ predict_weibo_sen }}”</span1></h1>
+                <h1>AI模型认为此条评论所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
                 {{ if group_id == "D" or group_id == "E" or group_id == "F" }}
                 <h1>以下为AI模型对此条评论各部分的判断:</h1>
                 <h2>橙色代表AI认为此部分文本为积极，蓝色部分代表AI认为此部分为消极，颜色越深程度越高</h2>
-                <h1><img src="{{ static image_path }}" /></h1>
+                <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
                 {{ elif group_id == "A" or group_id == "B" or group_id == "C" }}
                 <br>
                 {{ endif }}
@@ -153,7 +159,7 @@
         <br>
 
         <div>
-            <div class="first" align="center" >请选择你对AI的信任程度</div>
+            <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对AI的信任程度</div>
             <div class="second" align="center" >
                 <form>
                     <div class="star">
@@ -177,7 +183,7 @@
         </div>
 
         <div>
-            <div class="first" align="center" >请选择你对自己答案的自信程度</div>
+            <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度</div>
             <div class="second" align="center" >
             <form>
                 <div class="star">
@@ -200,9 +206,12 @@
             </div>
         </div>
 
-        <div align="center">
-            {{ formfield 'change_sample' }}
-        </div>
+        <div>
+            <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">如果你对这个样本不满意，可以选择更换一个标注样本，本样本不加入训练数据</div>
+            <div class="second" align="center" >
+                <button onclick="changedata()" type="button" align="center">切换样本</button>
+            </div>
+        </div>     
 
         <br>
         <br>
@@ -211,6 +220,7 @@
     <input type="hidden" name="sen_result" id="sen_result" />
     <input type="hidden" name="Human_confidence" id="Human_confidence" />
     <input type="hidden" name="AI_confidence" id="AI_confidence" />
+    <input type="hidden" name="change_number" id="change_number" />
 
 </div>
 </div>
@@ -257,6 +267,7 @@
     {{ formfield_errors 'sen_result' }}
     {{ formfield_errors 'AI_confidence' }}
     {{ formfield_errors 'Human_confidence' }}
+    {{ formfield_errors 'change_number' }}
 
 {{ endblock }}
 
