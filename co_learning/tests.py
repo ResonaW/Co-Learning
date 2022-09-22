@@ -13,14 +13,14 @@ class PlayerBot(Bot):
             if group_id in ['C','F']:
                 yield Introduction, dict(test=34.5)
         if self.round_number <= 100:
-            yield MyPage, dict(sen_result="1")
+            yield MyPage, dict(sen_result="1",AI_confidence="1",Human_confidence="1",change_sample="1")
         if self.round_number == 100:
             time.sleep(20)
             yield ResultWaitPage
         if self.round_number > 100:
             yield MyTest, dict(sen_result="1")
         if self.round_number == 50:
-            yield MyAC, dict(ac_result="0")
+            yield MyAC, dict(ac_result="0",AI_confidence="1",Human_confidence="1",change_sample="1")
         if self.round_number % 20 == 0 and self.round_number < 100:
             yield RestPage
         if self.round_number == 120:

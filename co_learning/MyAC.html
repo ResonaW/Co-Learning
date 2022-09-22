@@ -104,8 +104,8 @@
             var AI_confi = $("input[name='rating1']:checked").val();
             var human_confi = $("input[name='rating2']:checked").val();
             document.getElementById("ac_result").value=answer;
-            document.getElementById("AI_confidence_ac").value=AI_confi;
-            document.getElementById("Human_confidence_ac").value=human_confi;
+            document.getElementById("AI_confidence").value=AI_confi;
+            document.getElementById("Human_confidence").value=human_confi;
         }
     </script>
 </html>
@@ -200,8 +200,8 @@
         <button class="button-submit" onclick="uploaddata()">提交</button>
 
     <input type="hidden" name="ac_result" id="ac_result" />
-    <input type="hidden" name="Human_confidence_ac" id="Human_confidence_ac" />
-    <input type="hidden" name="AI_confidence_ac" id="AI_confidence_ac" />
+    <input type="hidden" name="Human_confidence" id="Human_confidence" />
+    <input type="hidden" name="AI_confidence" id="AI_confidence" />
 
 
 </div>
@@ -247,8 +247,8 @@
     </style>
 
     {{ formfield_errors 'ac_result' }}
-    {{ formfield_errors 'AI_confidence_ac' }}
-    {{ formfield_errors 'Human_confidence_ac' }}
+    {{ formfield_errors 'AI_confidence' }}
+    {{ formfield_errors 'Human_confidence' }}
 
 
 {{ endblock }}

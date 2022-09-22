@@ -33,7 +33,7 @@ class FileEventHandler(FileSystemEventHandler):
         self.test_dataset = test_dataset
         self.model = model
         self.tokenizer = tokenizer
-        self.log_df = pd.read_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv')
+        self.log_list = []
 
     def on_any_event(self, event):
         pass
@@ -51,8 +51,7 @@ class FileEventHandler(FileSystemEventHandler):
             file_name = re.search('(\w+)\.csv',event.src_path).group(1)
             if (file_name not in self.log_df['logging'].to_list()) and ('manual' not in file_name):
                 print("%s提交100条训练" % file_name)
-                self.log_df.loc[len(self.log_df)] = [file_name,str(datetime.now())]
-                log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
+                self.log_list.append(file_name)
                 # 模型训练阶段
                 time.sleep(3)
                 train_df = pd.read_csv(event.src_path)
@@ -86,8 +85,6 @@ if __name__ == "__main__":
     model = import_model()
     tokenizer = import_tokenizer()
     test_df = import_dataset()
-    log_df = pd.DataFrame(columns=['logging','time'])
-    log_df.to_csv('/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/logging.csv',index=False)
     test_dataset = My_Dataset(test_df, tokenizer)
     observer = Observer()
     event_handler = FileEventHandler(model=model, tokenizer=tokenizer, test_dataset=test_dataset)
