@@ -92,6 +92,10 @@ class Player(BasePlayer):
     test = models.FloatField(
         label='在下面的输入框中给出你的答案，只有正确计算出薪酬才能开始接下来的标注任务',
     )
+    # 计算用户更改的数量
+    change_number = models.IntegerField(
+        initial = 0,
+    )
     # 用户情感判断结果dataframe列表
     player_data = [pd.DataFrame(columns=["ID","text", "round", "label", "id","group","change","AI_confidence","Human_confidence"]) for _ in range(c.PLAYERS_PER_GROUP)]
     # 随机文本展示
@@ -198,7 +202,7 @@ class Introduction(Page):
 '''预测100条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
-    form_fields = ['sen_result','AI_confidence','Human_confidence','change_sample']
+    form_fields = ['sen_result','AI_confidence','Human_confidence','change_number']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
@@ -211,7 +215,11 @@ class MyPage(Page):
             predict_weibo_sen = r_data[2],
             # 可解释性导入
             image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
-            icon_path='starIcon.png'
+            icon_path='starIcon.png',
+            # 备用的样本参数,读入数据后写进这个地方
+            image_path_spare="",
+            content_weibo_spare="",
+            predict_weibo_sen_spare = "",
             )
     @staticmethod
     def before_next_page(player, timeout_happened):
