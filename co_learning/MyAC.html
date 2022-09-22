@@ -101,7 +101,11 @@
         }
         function uploaddata(){
             var answer = $("input[name='place1']:checked").val();
+            var AI_confi = $("input[name='rating1']:checked").val();
+            var human_confi = $("input[name='rating2']:checked").val();
             document.getElementById("ac_result").value=answer;
+            document.getElementById("AI_confidence_ac").value=AI_confi;
+            document.getElementById("Human_confidence_ac").value=human_confi;
         }
     </script>
 </html>
@@ -120,7 +124,7 @@
 <div class="card bg-light m-3">
     <div class="card-body">
         <br>
-    <p>这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请为评论情感类别选择“积极”这一选项。其余题目你可以自由进行选择。</p>
+    <p>这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请为评论情感类别选择“积极”这一选项。你对自己答案以及对AI的信任程度选择最低。是否提交样本请与你上一个标注保持一致。</p>
     </div>
 </div>
 
@@ -141,44 +145,112 @@
         <br>
         <br>
         <div>
-            <div class="first"> 
-                <div align="center">  
-                    <br>
-                    {{ formfield 'AI_confidence' }} 
-                    <br>
-                    <br>
-                    <br>
-                </div> 
+            <div class="first" align="center" >请选择你对AI的信任程度</div>
+            <div class="second" align="center" >
+                <form>
+                    <div class="star">
+                        <input type="radio" id="rate5" name="rating1" value="5">
+                        <label for="rate5" title="Amazing"></label>
+                 
+                        <input type="radio" id="rate4" name="rating1" value="4">
+                        <label for="rate4" title="Good"></label>
+                 
+                        <input type="radio" id="rate3" name="rating1" value="3">
+                        <label for="rate3" title="Average"></label>
+                 
+                        <input type="radio" id="rate2" name="rating1" value="2">
+                        <label for="rate2" title="Not good"></label>
+                 
+                        <input type="radio" id="rate1" name="rating1" value="1">
+                        <label for="rate1" title="Terrible"></label>
+                    </div>
+                </form>
             </div>
-            <div class="second"> 
-                <div align="center">  
-                    <br>
-                    {{ formfield 'Human_confidence' }} 
-                    <br>
-                    <br>
-                    <br>
-                </div> 
+        </div>
+
+        <div>
+            <div class="first" align="center" >请选择你对自己答案的自信程度</div>
+            <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate55" name="rating2" value="5">
+                    <label for="rate55" title="Amazing"></label>
+             
+                    <input type="radio" id="rate44" name="rating2" value="4">
+                    <label for="rate44" title="Good"></label>
+             
+                    <input type="radio" id="rate33" name="rating2" value="3">
+                    <label for="rate33" title="Average"></label>
+             
+                    <input type="radio" id="rate22" name="rating2" value="2">
+                    <label for="rate22" title="Not good"></label>
+             
+                    <input type="radio" id="rate11" name="rating2" value="1">
+                    <label for="rate11" title="Terrible"></label>
+                </div>
+            </form>
             </div>
-            <div class="third"> 
-                <div align="center">  
-                    <br>
-                    {{ formfield 'change_sample' }} 
-                    <br>
-                    <br>
-                    <br>
-                </div> 
-            </div>
+        </div>
+
+        <div align="center">
+            {{ formfield 'change_sample' }}
         </div>
         <br>
         <br>
         <button class="button-submit" onclick="uploaddata()">提交</button>
 
     <input type="hidden" name="ac_result" id="ac_result" />
+    <input type="hidden" name="Human_confidence_ac" id="Human_confidence_ac" />
+    <input type="hidden" name="AI_confidence_ac" id="AI_confidence_ac" />
+
 
 </div>
 </div>
+
+<!-- 星星的样式 -->
+<style>
+    .star{
+        display: block;
+        position: relative;
+        width: 150px;
+        height: 60px;
+        padding: 0;
+        border: none;
+    }
+     
+    .star > input{
+        position: absolute;
+        margin-right: -100%;
+        opacity: 0;
+    }
+     
+    .star > label{
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: 30px;
+        height: 30px;
+        color: transparent;
+        background-image: url("{{ static icon_path }}");
+        background-repeat: no-repeat;
+    }
+
+    .star > input:focus + label{
+        outline: none;
+    }
+     
+    .star > input:checked~label,
+    .star > input:focus~label,
+    .star > input:hover~label{
+        background-position: 0 -30px; 
+    }
+    </style>
 
     {{ formfield_errors 'ac_result' }}
+    {{ formfield_errors 'AI_confidence_ac' }}
+    {{ formfield_errors 'Human_confidence_ac' }}
+
+
 {{ endblock }}
 
 

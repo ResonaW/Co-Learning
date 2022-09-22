@@ -7,25 +7,18 @@
         <title>Human-AI Co-Learning</title>
         <style>
             .first {
-                width: 33.3%;
+                width: 50%;
                 float:left;
-                height: 150px;
-                border: 1px solid #3B6273;
-                border-radius:25px;
+                height: 100px;
+                /* border: 1px solid #3B6273;
+                border-radius:25px; */
             }
             .second {
-                width: 33.3%;
+                width: 50%;
                 float:left;
-                height: 150px;
-                border: 1px solid #3B6273;
-                border-radius:25px;
-            }
-            .third {
-                width: 33.3%;
-                float:left;
-                height: 150px;
-                border: 1px solid #3B6273;
-                border-radius:25px;
+                height: 100px;
+                /* border: 1px solid #3B6273;
+                border-radius:25px; */
             }
         </style>
         <style>
@@ -101,7 +94,11 @@
         }
         function uploaddata(){
             var answer = $("input[name='place1']:checked").val();
+            var AI_confi = $("input[name='rating1']:checked").val();
+            var human_confi = $("input[name='rating2']:checked").val();
             document.getElementById("sen_result").value=answer;
+            document.getElementById("AI_confidence").value=AI_confi;
+            document.getElementById("Human_confidence").value=human_confi;
         }
     </script>
 </html>
@@ -139,7 +136,7 @@
             <br>
             <br>
             {{ if group_id == "D" or group_id == "E" or group_id == "F" }}
-            <h1>请结合所给的评论内容、AI预测的标签以及AI对其预测结果的解释，判断该条评论所属的标签类别？</h1>
+            <h1>请结合所给评论、AI预测的标签以及AI对其预测结果的解释，判断该条评论所属的标签类别？</h1>
             {{ elif group_id == "A" or group_id == "B" or group_id == "C" }}
             <h1>请结合所给的评论内容以及AI预测的标签，判断该条评论所属的标签类别？</h1>
             {{ endif }}
@@ -154,45 +151,113 @@
         </div>
         <br>
         <br>
+
         <div>
-            <div class="first"> 
-                <div align="center">  
-                    <br>
-                    {{ formfield 'AI_confidence' }} 
-                    <br>
-                    <br>
-                    <br>
-                </div> 
-            </div>
-            <div class="second"> 
-                <div align="center">  
-                    <br>
-                    {{ formfield 'Human_confidence' }} 
-                    <br>
-                    <br>
-                    <br>
-                </div> 
-            </div>
-            <div class="third"> 
-                <div align="center">  
-                    <br>
-                    {{ formfield 'change_sample' }} 
-                    <br>
-                    <br>
-                    <br>
-                </div> 
+            <div class="first" align="center" >请选择你对AI的信任程度</div>
+            <div class="second" align="center" >
+                <form>
+                    <div class="star">
+                        <input type="radio" id="rate5" name="rating1" value="5">
+                        <label for="rate5" title="Amazing"></label>
+                 
+                        <input type="radio" id="rate4" name="rating1" value="4">
+                        <label for="rate4" title="Good"></label>
+                 
+                        <input type="radio" id="rate3" name="rating1" value="3">
+                        <label for="rate3" title="Average"></label>
+                 
+                        <input type="radio" id="rate2" name="rating1" value="2">
+                        <label for="rate2" title="Not good"></label>
+                 
+                        <input type="radio" id="rate1" name="rating1" value="1">
+                        <label for="rate1" title="Terrible"></label>
+                    </div>
+                </form>
             </div>
         </div>
+
+        <div>
+            <div class="first" align="center" >请选择你对自己答案的自信程度</div>
+            <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate55" name="rating2" value="5">
+                    <label for="rate55" title="Amazing"></label>
+             
+                    <input type="radio" id="rate44" name="rating2" value="4">
+                    <label for="rate44" title="Good"></label>
+             
+                    <input type="radio" id="rate33" name="rating2" value="3">
+                    <label for="rate33" title="Average"></label>
+             
+                    <input type="radio" id="rate22" name="rating2" value="2">
+                    <label for="rate22" title="Not good"></label>
+             
+                    <input type="radio" id="rate11" name="rating2" value="1">
+                    <label for="rate11" title="Terrible"></label>
+                </div>
+            </form>
+            </div>
+        </div>
+
+        <div align="center">
+            {{ formfield 'change_sample' }}
+        </div>
+
         <br>
         <br>
         <button class="button-submit" onclick="uploaddata()">提交</button>
 
     <input type="hidden" name="sen_result" id="sen_result" />
+    <input type="hidden" name="Human_confidence" id="Human_confidence" />
+    <input type="hidden" name="AI_confidence" id="AI_confidence" />
 
 </div>
 </div>
+
+<!-- 星星的样式 -->
+<style>
+    .star{
+        display: block;
+        position: relative;
+        width: 150px;
+        height: 60px;
+        padding: 0;
+        border: none;
+    }
+     
+    .star > input{
+        position: absolute;
+        margin-right: -100%;
+        opacity: 0;
+    }
+     
+    .star > label{
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: 30px;
+        height: 30px;
+        color: transparent;
+        background-image: url("{{ static icon_path }}");
+        background-repeat: no-repeat;
+    }
+
+    .star > input:focus + label{
+        outline: none;
+    }
+     
+    .star > input:checked~label,
+    .star > input:focus~label,
+    .star > input:hover~label{
+        background-position: 0 -30px; 
+    }
+    </style>
 
     {{ formfield_errors 'sen_result' }}
+    {{ formfield_errors 'AI_confidence' }}
+    {{ formfield_errors 'Human_confidence' }}
+
 {{ endblock }}
 
 
