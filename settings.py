@@ -8,6 +8,13 @@ SESSION_CONFIGS = [
         num_demo_participants=30,
         # use_browser_bots=True
     ),
+dict(
+        name='Experiment1',
+        display_name="Experiment1",
+        app_sequence=['Experiment1'],
+        num_demo_participants=30,
+        # use_browser_bots=True
+    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs

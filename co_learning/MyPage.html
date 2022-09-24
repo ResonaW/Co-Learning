@@ -99,9 +99,10 @@
             document.getElementById("sen_result").value=answer;
             document.getElementById("AI_confidence").value=AI_confi;
             document.getElementById("Human_confidence").value=human_confi;
+            document.getElementById("change_number").value={{ player.change_number }};
         }
         function changedata(){
-            $('#xalimg').attr('scr','{{ static image_path_spare }}')
+            document.getElementById("xalimg").value='{{ static image_path_spare }}';
             document.getElementById("content_comment").innerHTML='{{ content_weibo_spare }}';
             document.getElementById("predict_label").innerHTML='{{ predict_weibo_sen_spare }}';          
             document.getElementById("change_number").value = document.getElementById("change_number").value + 1 

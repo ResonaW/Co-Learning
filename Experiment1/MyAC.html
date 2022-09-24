@@ -1,0 +1,256 @@
+
+{{ block content }}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Human-AI Co-Learning</title>
+        <style>
+            .first {
+                width: 33.3%;
+                float:left;
+                height: 150px;
+                /* border: 1px solid #3B6273; */
+                /* border-radius:25px; */
+            }
+            .second {
+                width: 33.3%;
+                float:left;
+                height: 150px;
+                /* border: 1px solid #3B6273; */
+                /* border-radius:25px; */
+            }
+            .third {
+                width: 33.3%;
+                float:left;
+                height: 150px;
+                /* border: 1px solid #3B6273; */
+                /* border-radius:25px; */
+            }
+        </style>
+        <style>
+             @import url(http://fonts.googleapis.com/css?family=Lato:400,700,900);
+            .form {
+            }
+            .form header {
+                padding: 1em 0;
+                padding-bottom: 1em;
+            }
+            .form header h1 {
+                text-align: center;
+                font-size: 1.3em;
+                color: #5f7796;
+                font-weight: bolder;
+            }
+            .form header h2 {
+                text-align: center;
+                font-size: 1em;
+                color: #94a9c3;
+                font-weight: normal;
+            }
+            .form .button-submit {
+                font-weight: regular;
+                color: #fff;
+                font-size: 1em;
+                padding: 0.8em 2em;
+                border-radius: 50em;
+                border: none;
+                background: #5f7796;
+                margin: 1em auto 0.3em;
+                display: block;
+                transition: all 0.2s linear;
+            }
+            .form .button-submit:hover {
+                background: #374558;
+            }
+        </style>
+        <style>
+            span1 {
+                font-weight:bold;
+                color:#930000;
+                font-size: 30px;
+            }
+            span2{
+                font-weight:bold;
+                font-size: 20px;
+            }
+            /* 创建三个相等的列 */
+            .column {
+            /* float: inherit;
+            width: 33.33%;
+            position:relative;
+            right:-115px; */
+            flex: 1;
+            }
+            
+            /* 列后清除浮动 */
+            .row:after {
+            /* content: "";
+            display: table;
+            clear: both; */
+            display: -webkit-flex;  /* Safari */
+            display: flex;
+            }
+        </style>
+    </head>
+    <script>
+        var x = {{ ID }}
+        function round_left(){
+            var y = 100 - x ;
+            document.getElementById("round").innerHTML="本次标注任务剩余任务数量为："+y;
+        }
+        function uploaddata(){
+            var answer = $("input[name='place1']:checked").val();
+            var AI_confi = $("input[name='rating1']:checked").val();
+            var human_confi = $("input[name='rating2']:checked").val();
+            document.getElementById("ac_result").value=answer;
+            document.getElementById("AI_confidence").value=AI_confi;
+            document.getElementById("Human_confidence").value=human_confi;
+        }
+    </script>
+</html>
+
+<h3 align="center">The Co-design of an AI-Human Annotation Tool</h3>
+
+<hr>
+
+<h5 id="round" align="center">当前标注任务的位置是：
+    <span>
+        {{ ID }}/100
+    </span>
+</h5>
+
+<b style="font-size: 20px;">评论内容:</b>
+<div class="card bg-light m-3">
+    <div class="card-body">
+        <br>
+    <p>这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请为评论情感类别选择“积极”这一选项。你对自己答案以及对AI的信任程度选择最低。是否提交样本请与你上一个标注保持一致。</p>
+    </div>
+</div>
+
+    <div class="form">
+        <header>
+                <br>
+                <br>
+                <h1>请根据评论内容判断该条评论所属的标签类别，你标注的结果将最终决定你的薪酬！</h1>
+        </header>
+        <div class="row" align="center">
+            <div class="column">
+                <input type="radio" name="place1" value="1"/><span2 style="font-size: 20px color= #000">  积极</span>
+            </div>
+            <div class="column">
+              <input type="radio" name="place1" value="0"/><span2 style="font-size: 20px color= #000">  消极</span>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div>
+            <div class="first" align="center" >请选择你对AI的信任程度</div>
+            <div class="second" align="center" >
+                <form>
+                    <div class="star">
+                        <input type="radio" id="rate5" name="rating1" value="5">
+                        <label for="rate5" title="Amazing"></label>
+                 
+                        <input type="radio" id="rate4" name="rating1" value="4">
+                        <label for="rate4" title="Good"></label>
+                 
+                        <input type="radio" id="rate3" name="rating1" value="3">
+                        <label for="rate3" title="Average"></label>
+                 
+                        <input type="radio" id="rate2" name="rating1" value="2">
+                        <label for="rate2" title="Not good"></label>
+                 
+                        <input type="radio" id="rate1" name="rating1" value="1">
+                        <label for="rate1" title="Terrible"></label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <div class="first" align="center" >请选择你对自己答案的自信程度</div>
+            <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate55" name="rating2" value="5">
+                    <label for="rate55" title="Amazing"></label>
+             
+                    <input type="radio" id="rate44" name="rating2" value="4">
+                    <label for="rate44" title="Good"></label>
+             
+                    <input type="radio" id="rate33" name="rating2" value="3">
+                    <label for="rate33" title="Average"></label>
+             
+                    <input type="radio" id="rate22" name="rating2" value="2">
+                    <label for="rate22" title="Not good"></label>
+             
+                    <input type="radio" id="rate11" name="rating2" value="1">
+                    <label for="rate11" title="Terrible"></label>
+                </div>
+            </form>
+            </div>
+        </div>
+
+        <div align="center">
+            {{ formfield 'change_sample' }}
+        </div>
+        <br>
+        <br>
+        <button class="button-submit" onclick="uploaddata()">提交</button>
+
+    <input type="hidden" name="ac_result" id="ac_result" />
+    <input type="hidden" name="Human_confidence" id="Human_confidence" />
+    <input type="hidden" name="AI_confidence" id="AI_confidence" />
+
+
+</div>
+</div>
+
+<!-- 星星的样式 -->
+<style>
+    .star{
+        display: block;
+        position: relative;
+        width: 150px;
+        height: 60px;
+        padding: 0;
+        border: none;
+    }
+     
+    .star > input{
+        position: absolute;
+        margin-right: -100%;
+        opacity: 0;
+    }
+     
+    .star > label{
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: 30px;
+        height: 30px;
+        color: transparent;
+        background-image: url("{{ static icon_path }}");
+        background-repeat: no-repeat;
+    }
+
+    .star > input:focus + label{
+        outline: none;
+    }
+     
+    .star > input:checked~label,
+    .star > input:focus~label,
+    .star > input:hover~label{
+        background-position: 0 -30px; 
+    }
+    </style>
+
+    {{ formfield_errors 'ac_result' }}
+    {{ formfield_errors 'AI_confidence' }}
+    {{ formfield_errors 'Human_confidence' }}
+
+
+{{ endblock }}
+
+
