@@ -122,20 +122,52 @@
 </div>
     <div class="form">
         <header>
-            <div style="border-style:dashed;border-radius:25px;">
-                <br>
                 {{ if group_id == "A" }}
                 <br>
                 {{ elif group_id == "B" }}
-                <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
+                <div style="border-style:dashed;border-radius:25px;">
+                    <br><h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1><br>
+                </div>
+                <br>
                 {{ elif group_id == "C" }}
-                <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”,AI模型对其判断的信心程度为：<span1 id="predict_label_confidence">“{{ AI_predict_rate }}”</span1></h1>
-                {{ if group_id == "D" }}
-                <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
-                <h1>以下为AI模型对此条微博各部分的判断,“<span style="background:rgb(74, 74, 213)">蓝色文本代表消极</span>，<span style="background:orange">橙色文本代表积极</span>”颜色越深情感程度越高:</h1>
-                <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                <body onload="clickbutton()">
+                    <div style="border-style:dashed;border-radius:25px;">
+                        <br>
+                        <div>  
+                            <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
+                            <div class="second" align="center" >
+                                <form>
+                                    <div class="star">
+                                        <input type="radio" id="rate555" name="rating0" value="5">
+                                        <label for="rate555" title="Amazing"></label>
+                            
+                                        <input type="radio" id="rate444" name="rating0" value="4">
+                                        <label for="rate444" title="Good"></label>
+                                    
+                                        <input type="radio" id="rate333" name="rating0" value="3">
+                                        <label for="rate333" title="Average"></label>
+                                    
+                                        <input type="radio" id="rate222" name="rating0" value="2">
+                                        <label for="rate222" title="Not good"></label>
+                                    
+                                        <input type="radio" id="rate111" name="rating0" value="1">
+                                        <label for="rate111" title="Terrible"></label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>  
+                    </div>
+                </body>
+                <br>
+                {{ elif group_id == "D" }}
+                <div style="border-style:dashed;border-radius:25px;"><br>
+                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
+                    <h1>以下为AI模型对此条微博各部分的判断,“<span style="background:rgb(74, 74, 213)">蓝色文本代表消极</span>，<span style="background:orange">橙色文本代表积极</span>”颜色越深情感程度越高:</h1>
+                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                    <br>
+                </div>
                 {{ endif }}
-            </div>
             {{ if group_id == "A" }}
             <h1>请结合所给微博内容判断该条微博所属的标签类别？</h1>
             {{ elif group_id == "B" }}
@@ -145,8 +177,6 @@
             {{ elif group_id == "D" }}
             <h1>请结合所给的微博内容、AI预测的标签以及AI对于决策的解释，判断该条微博所属的标签类别？</h1>
             {{ endif }}
-            <br>
-            <br>
         </header>
         
         <div class="row" align="center">
@@ -277,6 +307,27 @@
     }
     </style>
 
+<!-- 自动选中 -->
+<script>
+    function clickbutton(){
+        var confidence_AI = {{ AI_predict_rate }};
+        if (confidence_AI == '1') {
+            document.getElementById("rate111").checked="checked";
+        }
+        if (confidence_AI == '2') {
+            document.getElementById("rate222").checked="checked";
+        }  
+        if (confidence_AI == '3') {
+            document.getElementById("rate333").checked="checked";
+        }  
+        if (confidence_AI == '4') {
+            document.getElementById("rate444").checked="checked";
+        }  
+        if (confidence_AI == '5') {
+            document.getElementById("rate555").checked="checked";
+        }  
+    }
+</script>
     {{ formfield_errors 'sen_result' }}
     {{ formfield_errors 'AI_confidence' }}
     {{ formfield_errors 'Human_confidence' }}
