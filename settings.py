@@ -1,13 +1,13 @@
 from os import environ
 
 SESSION_CONFIGS = [
-    dict(
-        name='co_learning',
-        display_name="co_learning",
-        app_sequence=['co_learning'],
-        num_demo_participants=30,
-        # use_browser_bots=True
-    ),
+    # dict(
+    #     name='co_learning',
+    #     display_name="co_learning",
+    #     app_sequence=['co_learning'],
+    #     num_demo_participants=30,
+    #     # use_browser_bots=True
+    # ),
 dict(
         name='Experiment1',
         display_name="Experiment1",

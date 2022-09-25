@@ -29,7 +29,8 @@ class Bonus():
         self.group_id = group_id
         self.flag = False
         self.TRUE_LABELS = [1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1]
-        self.CSV_PATH = '/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'
+        # self.CSV_PATH = '/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'
+        self.CSV_PATH = './Co-Learning/watchdog_trainer/csv/'
         self.manual_csv_name = self.CSV_PATH+"%d_%s_test_manual.csv" % (self.id_in_group,self.group_id)
         self.model_csv_name = self.CSV_PATH+"%d_%s_test_model.csv" % (self.id_in_group,self.group_id)
     '''检查csv文件是否存在 不存在时阻塞'''
@@ -56,8 +57,9 @@ class C(BaseConstants):
     # 待修改 后续应该是600人
     PLAYERS_PER_GROUP = 30
     NUM_ROUNDS = 120
-    file=pd.read_excel("/home/ubuntu/Otree_Project/Co-Learning/co_learning/dataset.xlsx")
-    file_spare = pd.read_excel('/home/ubuntu/Otree_Project/Co-Learning/co_learning/spare_dataset.xlsx')
+    # file=pd.read_excel("/home/ubuntu/Otree_Project/Co-Learning/co_learning/dataset.xlsx")
+    file = pd.read_excel("./co_learning/dataset.xlsx")
+    file_spare = pd.read_excel('./co_learning/spare_dataset.xlsx')
 
 class Subsession(BaseSubsession):
     pass
@@ -70,11 +72,12 @@ class Player(BasePlayer):
     # 训练集dataframe
     df=c.file
     # 用户情感判断结果dataframe列表
-    player_data = [pd.DataFrame(columns=["ID","text", "round", "label", "id","group","change","AI_confidence","Human_confidence"]) for _ in range(c.PLAYERS_PER_GROUP)]
+    # player_data = [pd.DataFrame(columns=["ID","text", "round", "label", "id","group","change","AI_confidence","Human_confidence"]) for _ in range(c.PLAYERS_PER_GROUP)]
+    player_data = pd.DataFrame(columns=["ID", "text", "round", "label", "id", "group", "change", "AI_confidence", "Human_confidence"])
     # 随机文本展示
-    random_list = [[i for i in range(100)] for _ in range(100)]
-    for i in range(100):
-        random.shuffle(random_list[i])
+    # random_list = [[i for i in range(100)] for _ in range(100)]
+    # for i in range(100):
+    #     random.shuffle(random_list[i])
     # 用户Attention Check结果dataframe
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
     # 用户情感判断结果及Attention Check结果
@@ -153,42 +156,42 @@ class Introduction(Page):
 '''预测100条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
-    form_fields = ['sen_result']
+    form_fields = ['sen_result','AI_confidence','Human_confidence']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        r_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
+        # r_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
+        r_data = player.df.loc[player.round_number].tolist()
         group_id = get_group_id(player.id_in_group)
         return dict(
             ID=r_num,
             group_id = group_id,
             content_weibo=r_data[1],
             predict_weibo_sen = r_data[2],
-            
             # 放进AI置信度
-            AI_predict_rate = ,
-            
+            AI_predict_rate = "4",
             # 可解释性导入
-            image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
+            # image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
+            image_path='lime_imgs/lime_exp{}.png'.format(player.round_number),
             icon_path='starIcon.png',
             )
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        r_num = player.round_number
-        ID = player.random_list[player.id_in_group-1][r_num-1]
-        round_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
-        round_content = round_data[1]
-        round_result = player.sen_result
-        group_id = get_group_id(player.id_in_group)
-        # 是否选择将样本添加训练
-        train_change = player.change_sample
-        AI_confidence = player.AI_confidence
-        Human_confidence = player.Human_confidence
-        current_df = player.player_data[player.id_in_group-1]
-        current_df.loc[len(current_df)] = [ID,round_content,r_num,round_result,player.id_in_group,group_id,train_change,AI_confidence,Human_confidence]
-        if r_num == 100:
-            current_df = current_df.sort_values(by='ID',ascending=True)
-            current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
+    # @staticmethod
+    # def before_next_page(player, timeout_happened):
+    #     r_num = player.round_number
+    #     ID = player.random_list[player.id_in_group-1][r_num-1]
+    #     round_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
+    #     round_content = round_data[1]
+    #     round_result = player.sen_result
+    #     group_id = get_group_id(player.id_in_group)
+    #     # 是否选择将样本添加训练
+    #     train_change = player.change_sample
+    #     AI_confidence = player.AI_confidence
+    #     Human_confidence = player.Human_confidence
+    #     current_df = player.player_data[player.id_in_group-1]
+    #     current_df.loc[len(current_df)] = [ID,round_content,r_num,round_result,player.id_in_group,group_id,train_change,AI_confidence,Human_confidence]
+    #     if r_num == 100:
+    #         current_df = current_df.sort_values(by='ID',ascending=True)
+    #         current_df.to_csv("./watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
     @staticmethod
     def is_displayed(player):
         return player.round_number <= 100
@@ -196,7 +199,7 @@ class MyPage(Page):
 '''Attention Check页面'''
 class MyAC(Page):
     form_model = 'player'
-    form_fields = ['ac_result','AI_confidence','Human_confidence','change_sample']
+    form_fields = ['ac_result']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
@@ -211,7 +214,8 @@ class MyAC(Page):
             round_result = player.ac_result
             group_id = get_group_id(player.id_in_group)
             player.player_ac.loc[len(player.player_ac.index)] = [round_num,round_result,player.id_in_group,group_id]
-            player.player_ac.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/attention_check/attention_check.csv", index=False)
+            # player.player_ac.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/attention_check/attention_check.csv", index=False)
+            player.player_ac.to_csv("./watchdog_trainer/attention_check/attention_check.csv", index=False)
     def is_displayed(player):
         return player.round_number == 50
 
@@ -240,7 +244,8 @@ class MyTest(Page):
         if r_num == 120:
             current_df = current_df.iloc[-20:,:]
             current_df = current_df.sort_values(by='ID',ascending=True)
-            current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group,group_id), index=False)
+            # current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group, group_id), index=False)
+            current_df.to_csv("./watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group, group_id), index=False)
     def is_displayed(player):
         return player.round_number > 100
 
