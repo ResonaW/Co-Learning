@@ -6,6 +6,22 @@
         <meta charset="utf-8">
         <title>Human-AI Co-Learning</title>
         <style>
+            .first {
+                width: 50%;
+                float:left;
+                height: 50px;
+                /* border: 1px solid #3B6273;
+                border-radius:25px; */
+            }
+            .second {
+                width: 50%;
+                float:left;
+                height: 50px;
+                /* border: 1px solid #3B6273;
+                border-radius:25px; */
+            }
+        </style>
+        <style>
              @import url(http://fonts.googleapis.com/css?family=Lato:400,700,900);
             .form {
             }
@@ -71,7 +87,7 @@
         </style>
     </head>
     <script>
-        var x = {{ ID }} - 32
+        var x = {{ ID }}
         function round_left(){
             var y = 32 - x ;
             document.getElementById("round").innerHTML="本次标注任务剩余任务数量为："+y;
@@ -98,14 +114,17 @@
 <b style="font-size: 20px;">微博内容:</b>
 <div class="card bg-light m-3">
     <div class="card-body">
-        <br>
-    <p>{{ content_weibo }}</p>
+    <br>
+    <p id="content_comment">{{ content_weibo }}</p>
     </div>
 </div>
     <div class="form">
-        <header>
-            <h1>请根据微博内容判断该条微博所属的标签类别，你标注的结果将最终决定你的薪酬！</h1>
+        <header>  
+                <br>
+                <br>
+            <h1>请根据所给微博内容判断该条微博所属的标签类别？</h1>
         </header>
+        
         <div class="row" align="center">
             <div class="column">
                 <input type="radio" name="place1" value="1" /><span2 style="font-size: 20px color= #000">  愤怒</span>
@@ -131,6 +150,8 @@
         </div>
         <br>
         <br>
+
+
         <div>
             <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度</div>
             <div class="second" align="center" >
@@ -160,15 +181,54 @@
         <br>
         <button class="button-submit" onclick="uploaddata()">提交</button>
 
-    <input type="hidden" name="sen_result" id="sen_result" />
+    <input type="hidden" name="sen_result_pre" id="sen_result_pre" />
     <input type="hidden" name="Human_confidence_pre" id="Human_confidence_pre" />
 
 </div>
 </div>
 
-    {{ formfield_errors 'sen_result' }}
+<!-- 星星的样式 -->
+<style>
+    .star{
+        display: block;
+        position: relative;
+        width: 150px;
+        height: 60px;
+        padding: 0;
+        border: none;
+    }
+     
+    .star > input{
+        position: absolute;
+        margin-right: -100%;
+        opacity: 0;
+    }
+     
+    .star > label{
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: 30px;
+        height: 30px;
+        color: transparent;
+        background-image: url("{{ static icon_path }}");
+        background-repeat: no-repeat;
+    }
+
+    .star > input:focus + label{
+        outline: none;
+    }
+     
+    .star > input:checked~label,
+    .star > input:focus~label,
+    .star > input:hover~label{
+        background-position: 0 -30px; 
+    }
+    </style>
+
+    {{ formfield_errors 'sen_result_pre' }}
     {{ formfield_errors 'Human_confidence_pre' }}
-    
+
 {{ endblock }}
 
 

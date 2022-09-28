@@ -9,19 +9,21 @@ doc = """Co-Learning"""
 
 def get_group_id(id_in_group):
     '''A：手工；B；展示预测；C：展示预测+AI置信度；D：预测+可解释'''
-    if (id_in_group - 1) % 4 == 0:
+    if (id_in_group - 1) % 5 == 0:
         sort = 'A'
-    elif (id_in_group - 2) % 4 == 0:
+    elif (id_in_group - 2) % 5 == 0:
         sort = 'B'
-    elif (id_in_group - 3) % 4 == 0:
+    elif (id_in_group - 3) % 5 == 0:
         sort = 'C'
-    elif (id_in_group - 4) % 4 == 0:
+    elif (id_in_group - 4) % 5 == 0:
         sort = 'D'
+    elif (id_in_group - 5) % 5 == 0:
+        sort = 'E'
     else:
         return None
     return sort
 
-# 报酬=10（基础）+2*标对-1*标错
+# 报酬=5（基础）+1*标对-0.5*标错
 class Bonus():
     '''计算受访者报酬'''
     def __init__(self, id_in_group, group_id) -> None:
@@ -56,7 +58,7 @@ class C(BaseConstants):
     NAME_IN_URL = 'Experiment1'
     # 待修改 后续应该是600人
     PLAYERS_PER_GROUP = 30
-    NUM_ROUNDS = 120
+    NUM_ROUNDS = 64
     # file=pd.read_excel("/home/ubuntu/Otree_Project/Co-Learning/co_learning/dataset.xlsx")
     file = pd.read_excel("./co_learning/dataset.xlsx")
     file_spare = pd.read_excel('./co_learning/spare_dataset.xlsx')
@@ -82,6 +84,8 @@ class Player(BasePlayer):
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
     # 用户情感判断结果及Attention Check结果
     sen_result = models.IntegerField()
+    sen_result_pre = models.IntegerField()
+    # 用户看过AI预测结果后的更改的结果
     ac_result = models.IntegerField()
     # SurveyPage问题
     age = models.IntegerField(
@@ -139,7 +143,9 @@ class Player(BasePlayer):
     advice = models.StringField(label="您是否有其它的建议或意见，或者谈谈您对实验的感受？")
 #     添加收集对AI预测结果以及自己判断的信心
     AI_confidence = models.IntegerField()
+    AI_confidence_pre = models.IntegerField()
     Human_confidence = models.IntegerField()
+    Human_confidence_pre = models.IntegerField()
 
 # PAGES
 '''介绍界面'''
@@ -153,7 +159,33 @@ class Introduction(Page):
         group_id = get_group_id(player.id_in_group)
         return dict(id=group_id)
 
-'''预测100条文本情感页面'''
+class PrePage(Page):
+    form_model = 'player'
+    form_fields = ['sen_result_pre','Human_confidence_pre']
+    @staticmethod
+    def vars_for_template(player):
+        r_num = player.round_number
+        # r_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
+        r_data = player.df.loc[player.round_number].tolist()
+        group_id = get_group_id(player.id_in_group)
+        return dict(
+            ID=r_num,
+            group_id = group_id,
+            content_weibo=r_data[1],
+            predict_weibo_sen = r_data[2],
+            # 放进AI置信度
+            AI_predict_rate = "4",
+            # 可解释性导入
+            # image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
+            image_path='lime_imgs/lime_exp{}.png'.format(player.round_number),
+            icon_path='starIcon.png',
+            )
+    @staticmethod
+    def is_displayed(player):
+        group_id = get_group_id(player.id_in_group)
+        return player.round_number <= 32 and ( group_id == 'D' or group_id == 'E' or group_id == 'A')
+
+'''预测32条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
     form_fields = ['sen_result','AI_confidence','Human_confidence']
@@ -194,7 +226,8 @@ class MyPage(Page):
     #         current_df.to_csv("./watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
     @staticmethod
     def is_displayed(player):
-        return player.round_number <= 100
+        group_id = get_group_id(player.id_in_group)
+        return player.round_number <= 32 and group_id != 'A'
 
 '''Attention Check页面'''
 class MyAC(Page):
@@ -210,25 +243,25 @@ class MyAC(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         round_num = player.round_number
-        if round_num == 50:
+        if round_num == 16:
             round_result = player.ac_result
             group_id = get_group_id(player.id_in_group)
             player.player_ac.loc[len(player.player_ac.index)] = [round_num,round_result,player.id_in_group,group_id]
             # player.player_ac.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/attention_check/attention_check.csv", index=False)
             player.player_ac.to_csv("./watchdog_trainer/attention_check/attention_check.csv", index=False)
     def is_displayed(player):
-        return player.round_number == 50
+        return player.round_number == 16
 
-'''预测20条文本情感页面'''
+'''预测32条文本情感页面'''
 class MyTest(Page):
     form_model = 'player'
-    form_fields = ['sen_result']
+    form_fields = ['sen_result','Human_confidence']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
         r_data = player.df.loc[r_num-1].tolist()
         return dict(
-            ID=r_num-100,
+            ID=r_num-32,
             content_weibo=r_data[1],
             predict_weibo_sen = r_data[2]
         )
@@ -241,31 +274,21 @@ class MyTest(Page):
         group_id = get_group_id(player.id_in_group)
         current_df = player.player_data[player.id_in_group-1]
         current_df.loc[len(current_df)] = [r_num-1,round_content,r_num,round_result,player.id_in_group,group_id,None,None,None]
-        if r_num == 120:
+        if r_num == 64:
             current_df = current_df.iloc[-20:,:]
             current_df = current_df.sort_values(by='ID',ascending=True)
             # current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group, group_id), index=False)
             current_df.to_csv("./watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group, group_id), index=False)
     def is_displayed(player):
-        return player.round_number > 100
+        return player.round_number > 32
 
-'''休息界面'''
-class RestPage(Page):
-    form_model = 'player'
-    def is_displayed(player):
-        return player.round_number % 20 == 0 and player.round_number < 100
-    @staticmethod
-    def vars_for_template(player):
-        return dict(
-            round = player.round_number,
-        )
 
-'''100条标注后提示界面'''
+'''32条标注后提示界面'''
 class ResultWaitPage(Page):
     form_model = 'player'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 100
+        return player.round_number == 32
 
 '''Survey页面'''
 class ExitSurveyPage(Page):
@@ -282,7 +305,7 @@ class ExitSurveyPage(Page):
         return dict( num=player.round_number )
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 120
+        return player.round_number == 64
     # 薪酬部分可能需要改一改
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -301,7 +324,7 @@ class RewardPage(Page):
     form_model = 'player'
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 120
+        return player.round_number == 64
     @staticmethod
     def vars_for_template(player):
         group_id = get_group_id(player.id_in_group)
@@ -311,4 +334,4 @@ class RewardPage(Page):
         player.player_data[player.id_in_group-1] = None
         return dict( reward=reward )
 
-page_sequence = [Introduction,MyPage,MyAC,MyTest,RestPage,ResultWaitPage,ExitSurveyPage,RewardPage]
+page_sequence = [Introduction,PrePage,MyPage,MyAC,MyTest,ResultWaitPage,ExitSurveyPage,RewardPage]
