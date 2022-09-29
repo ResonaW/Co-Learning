@@ -9,11 +9,11 @@ SESSION_CONFIGS = [
     #     # use_browser_bots=True
     # ),
 dict(
-        name='Experiment1',
+        name='Experiment1', # 实验1
         display_name="Experiment1",
         app_sequence=['Experiment1'],
         num_demo_participants=30,
-        # use_browser_bots=True
+        use_browser_bots=True # 自动填写fields
     ),
 ]
 
@@ -26,7 +26,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc="",
 )
 
-PARTICIPANT_FIELDS = []
+PARTICIPANT_FIELDS = ['output_df']
 SESSION_FIELDS = []
 
 # ISO-639 code
@@ -47,4 +47,4 @@ DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = '5908604368973'
 INSTALLED_APPS = ['otree']
-DEBUG=False
+DEBUG=False #关闭debug模式

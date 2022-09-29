@@ -80,7 +80,7 @@
             var answer = $("input[name='place1']:checked").val();
             var human_confi = $("input[name='rating2']:checked").val();
             document.getElementById("sen_result_pre").value=answer;
-            document.getElementById("Human_confidence_pre").value=human_confi;
+            document.getElementById("Human_confidence").value=human_confi;
         }
     </script>
 </html>
@@ -108,25 +108,25 @@
         </header>
         <div class="row" align="center">
             <div class="column">
-                <input type="radio" name="place1" value="1" /><span2 style="font-size: 20px color= #000">  愤怒</span>
+                <input type="radio" name="place1" value="4" /><span2 style="font-size: 20px color= #000">  愤怒</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="2" /><span2 style="font-size: 20px color= #000">  厌恶</span>
+                <input type="radio" name="place1" value="3" /><span2 style="font-size: 20px color= #000">  厌恶</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="3" /><span2 style="font-size: 20px color= #000">  恐惧</span>
+                <input type="radio" name="place1" value="6" /><span2 style="font-size: 20px color= #000">  恐惧</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="4" /><span2 style="font-size: 20px color= #000">  快乐</span>
+                <input type="radio" name="place1" value="1" /><span2 style="font-size: 20px color= #000">  快乐</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="5" /><span2 style="font-size: 20px color= #000">  喜欢</span>
+                <input type="radio" name="place1" value="0" /><span2 style="font-size: 20px color= #000">  喜爱</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="6" /><span2 style="font-size: 20px color= #000">  惊讶</span>
+                <input type="radio" name="place1" value="5" /><span2 style="font-size: 20px color= #000">  惊讶</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="7" /><span2 style="font-size: 20px color= #000">  悲伤</span>
+                <input type="radio" name="place1" value="2" /><span2 style="font-size: 20px color= #000">  悲伤</span>
             </div>
         </div>
         <br>
@@ -161,13 +161,13 @@
         <button class="button-submit" onclick="uploaddata()">提交</button>
 
     <input type="hidden" name="sen_result" id="sen_result" />
-    <input type="hidden" name="Human_confidence_pre" id="Human_confidence_pre" />
+    <input type="hidden" name="Human_confidence" id="Human_confidence" />
 
 </div>
 </div>
 
     {{ formfield_errors 'sen_result' }}
-    {{ formfield_errors 'Human_confidence_pre' }}
+    {{ formfield_errors 'Human_confidence' }}
     
 {{ endblock }}
 

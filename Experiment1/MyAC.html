@@ -101,7 +101,7 @@
         }
         function uploaddata(){
             var answer = $("input[name='place1']:checked").val();
-            document.getElementById("ac_result").value=answer;
+            document.getElementById("sen_result").value=answer;
         }
     </script>
 </html>
@@ -120,7 +120,7 @@
 <div class="card bg-light m-3">
     <div class="card-body">
         <br>
-    <p>这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请为评论情感类别选择“喜欢”这一选项。你对自己答案以及对AI的信任程度可以随意选择。</p>
+    <p>这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请为评论情感类别选择“喜爱”这一选项。你对自己答案以及对AI的信任程度可以随意选择。</p>
     </div>
 </div>
 
@@ -132,25 +132,25 @@
         </header>
         <div class="row" align="center">
             <div class="column">
-                <input type="radio" name="place1" value="1" /><span2 style="font-size: 20px color= #000">  愤怒</span>
+                <input type="radio" name="place1" value="4" /><span2 style="font-size: 20px color= #000">  愤怒</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="2" /><span2 style="font-size: 20px color= #000">  厌恶</span>
+                <input type="radio" name="place1" value="3" /><span2 style="font-size: 20px color= #000">  厌恶</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="3" /><span2 style="font-size: 20px color= #000">  恐惧</span>
+                <input type="radio" name="place1" value="6" /><span2 style="font-size: 20px color= #000">  恐惧</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="4" /><span2 style="font-size: 20px color= #000">  快乐</span>
+                <input type="radio" name="place1" value="1" /><span2 style="font-size: 20px color= #000">  快乐</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="5" /><span2 style="font-size: 20px color= #000">  喜欢</span>
+                <input type="radio" name="place1" value="0" /><span2 style="font-size: 20px color= #000">  喜爱</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="6" /><span2 style="font-size: 20px color= #000">  惊讶</span>
+                <input type="radio" name="place1" value="5" /><span2 style="font-size: 20px color= #000">  惊讶</span>
             </div>
             <div class="column">
-                <input type="radio" name="place1" value="7" /><span2 style="font-size: 20px color= #000">  悲伤</span>
+                <input type="radio" name="place1" value="2" /><span2 style="font-size: 20px color= #000">  悲伤</span>
             </div>
         </div>
         <br>
@@ -207,7 +207,7 @@
         <br>
         <button class="button-submit" onclick="uploaddata()">提交</button>
 
-    <input type="hidden" name="ac_result" id="ac_result" />
+    <input type="hidden" name="sen_result" id="sen_result" />
 
 
 </div>
@@ -252,7 +252,7 @@
     }
     </style>
 
-    {{ formfield_errors 'ac_result' }}
+    {{ formfield_errors 'sen_result' }}
 
 
 {{ endblock }}

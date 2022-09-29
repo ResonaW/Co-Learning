@@ -5,10 +5,17 @@ import os
 import numpy as np
 import random
 
-doc = """Co-Learning"""
+doc = """Experiment1"""
 
+''' 各组展示方法:
+    1A:No AI
+    2B:AI
+    3C:AI+EXP
+    4D:AI+Relabel
+    5E:AI+Relabel+EXP
+'''
 def get_group_id(id_in_group):
-    '''A：手工；B；展示预测；C：展示预测+AI置信度；D：预测+可解释'''
+    # id从1开始
     if (id_in_group - 1) % 5 == 0:
         sort = 'A'
     elif (id_in_group - 2) % 5 == 0:
@@ -23,25 +30,19 @@ def get_group_id(id_in_group):
         return None
     return sort
 
-# 报酬=5（基础）+1*标对-0.5*标错
 class Bonus():
-    '''计算受访者报酬'''
+    '''计算受访者报酬：报酬=5(基础)+1*标对-0.5*标错'''
     def __init__(self, id_in_group, group_id) -> None:
         self.id_in_group =  id_in_group
         self.group_id = group_id
         self.flag = False
-        self.TRUE_LABELS = [1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1]
-        # self.CSV_PATH = '/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/'
-        self.CSV_PATH = './Co-Learning/watchdog_trainer/csv/'
-        self.manual_csv_name = self.CSV_PATH+"%d_%s_test_manual.csv" % (self.id_in_group,self.group_id)
-        self.model_csv_name = self.CSV_PATH+"%d_%s_test_model.csv" % (self.id_in_group,self.group_id)
+        tmp_df = pd.read_excel("./Experiment1/dataset.xlsx")
+        self.TRUE_LABELS = tmp_df['label'].iloc[32:].to_list() # 验证集的ground truth标签
+        self.CSV_PATH = './watchdog_trainer/test_csv/'
+        self.manual_csv_name = self.CSV_PATH+"%d_%s.csv" % (self.id_in_group,self.group_id)
     '''检查csv文件是否存在 不存在时阻塞'''
     def manual_csv_name_check(self):
         while not os.path.exists(self.manual_csv_name):
-            time.sleep(1)
-        self.flag = True
-    def model_csv_name_check(self):
-        while not os.path.exists(self.model_csv_name):
             time.sleep(1)
         self.flag = True
     '''计算收益'''
@@ -51,7 +52,7 @@ class Bonus():
     def calculate_bonus(self):
         manual_df = pd.read_csv(self.manual_csv_name)
         human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
-        salary = 10+human_correct*2-(20-human_correct)*1
+        salary = 5+human_correct*1-(32-human_correct)*0.5
         return salary
 
 class C(BaseConstants):
@@ -59,9 +60,11 @@ class C(BaseConstants):
     # 待修改 后续应该是600人
     PLAYERS_PER_GROUP = 30
     NUM_ROUNDS = 64
-    # file=pd.read_excel("/home/ubuntu/Otree_Project/Co-Learning/co_learning/dataset.xlsx")
-    file = pd.read_excel("./co_learning/dataset.xlsx")
-    file_spare = pd.read_excel('./co_learning/spare_dataset.xlsx')
+    # 训练和验证集csv存放位置
+    PRELABEL_CSV_PATH  = './watchdog_trainer/prelabel_csv/'
+    TRAIN_CSV_PATH = './watchdog_trainer/train_csv/' 
+    TEST_CSV_PATH = './watchdog_trainer/test_csv/' 
+    ATTENTION_CHECK_CSV_PATH = './watchdog_trainer/attention_check_csv/'
 
 class Subsession(BaseSubsession):
     pass
@@ -69,24 +72,23 @@ class Subsession(BaseSubsession):
 class Group(BaseGroup):
     pass
 
+# 这里之后尝试用以下Participants
 class Player(BasePlayer):
     c=C()
     # 训练集dataframe
-    df=c.file
-    # 用户情感判断结果dataframe列表
-    # player_data = [pd.DataFrame(columns=["ID","text", "round", "label", "id","group","change","AI_confidence","Human_confidence"]) for _ in range(c.PLAYERS_PER_GROUP)]
-    player_data = pd.DataFrame(columns=["ID", "text", "round", "label", "id", "group", "change", "AI_confidence", "Human_confidence"])
-    # 随机文本展示
-    # random_list = [[i for i in range(100)] for _ in range(100)]
-    # for i in range(100):
-    #     random.shuffle(random_list[i])
+    df = pd.read_excel("./Experiment1/dataset.xlsx")
+    # 存放用户在prepage中的第一次提交(before relabel)
+    player_prelabel = pd.DataFrame(columns=["round", "text", "label", "id", "group", "Human_confidence"])
+    # 存放用户的提交的前32条训练数据
+    player_train = pd.DataFrame(columns=["round", "text", "label", "id", "group", "AI_confidence", "Human_confidence"])
+    # 存放用户的提交的后32条测试数据
+    player_test = pd.DataFrame(columns=["round", "text", "label", "id", "group", "Human_confidence"])
     # 用户Attention Check结果dataframe
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
-    # 用户情感判断结果及Attention Check结果
-    sen_result = models.IntegerField()
-    sen_result_pre = models.IntegerField()
-    # 用户看过AI预测结果后的更改的结果
-    ac_result = models.IntegerField()
+    # ----------以下为fields----------
+    sen_result = models.IntegerField()  # 用户情感判断结果
+    AI_confidence = models.IntegerField() # AI置信度
+    Human_confidence = models.IntegerField() # 人类置信度
     # SurveyPage问题
     age = models.IntegerField(
         label='您的年龄段是?',
@@ -141,11 +143,7 @@ class Player(BasePlayer):
         choices=[['1', '第一种'], ['2', '第二种'], ['3', '第三种']]
     )
     advice = models.StringField(label="您是否有其它的建议或意见，或者谈谈您对实验的感受？")
-#     添加收集对AI预测结果以及自己判断的信心
-    AI_confidence = models.IntegerField()
-    AI_confidence_pre = models.IntegerField()
-    Human_confidence = models.IntegerField()
-    Human_confidence_pre = models.IntegerField()
+
 
 # PAGES
 '''介绍界面'''
@@ -159,31 +157,55 @@ class Introduction(Page):
         group_id = get_group_id(player.id_in_group)
         return dict(id=group_id)
 
+'''首次标注界面（不展示AI）'''
 class PrePage(Page):
     form_model = 'player'
-    form_fields = ['sen_result_pre','Human_confidence_pre']
+    form_fields = ['sen_result','Human_confidence']
     @staticmethod
-    def vars_for_template(player):
+    def vars_for_template(player): # 此处做了精简
         r_num = player.round_number
-        # r_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
-        r_data = player.df.loc[player.round_number].tolist()
-        group_id = get_group_id(player.id_in_group)
+        r_data = player.df.iloc[r_num-1]
         return dict(
-            ID=r_num,
-            group_id = group_id,
-            content_weibo=r_data[1],
-            predict_weibo_sen = r_data[2],
-            # 放进AI置信度
-            AI_predict_rate = "4",
-            # 可解释性导入
-            # image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
-            image_path='lime_imgs/lime_exp{}.png'.format(player.round_number),
+            ID=r_num, # 轮数
+            content_weibo=r_data['text'],
             icon_path='starIcon.png',
             )
     @staticmethod
     def is_displayed(player):
-        group_id = get_group_id(player.id_in_group)
+        group_id = get_group_id(player.id_in_group) # 不展示AI，A组直接标注数据，DE组进行第一次Label(Prelabel)
         return player.round_number <= 32 and ( group_id == 'D' or group_id == 'E' or group_id == 'A')
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        r_num = player.round_number
+        r_data = player.df.iloc[r_num-1]
+        # 如果为A组，和其他组一样直接将数据保存到train_csv，如果为DE组，则单独创建一个记录保存prelabel结果
+        if get_group_id(player.id_in_group) == 'A':
+            player.player_train.loc[len(player.player_train)] = [
+                r_num,
+                r_data['text'],
+                player.sen_result,
+                player.id_in_group,
+                get_group_id(player.id_in_group),
+                None,
+                player.Human_confidence
+            ]
+            if r_num == 32: # 保存用户的数据
+                current_df = player.player_train[player.player_train['id']==player.id_in_group]
+                current_df.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+                player.player_train.drop(current_df.index,inplace=True) # 减少存储开销
+        else:
+            player.player_prelabel.loc[len(player.player_prelabel)] = [
+                r_num,
+                r_data['text'],
+                player.sen_result,
+                player.id_in_group,
+                get_group_id(player.id_in_group),
+                player.Human_confidence
+            ]
+            if r_num == 32: # 保存用户的数据
+                current_df = player.player_prelabel[player.player_prelabel['id']==player.id_in_group]
+                current_df.to_csv(player.c.PRELABEL_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+                player.player_prelabel.drop(current_df.index,inplace=True) # 减少存储开销
 
 '''预测32条文本情感页面'''
 class MyPage(Page):
@@ -192,38 +214,34 @@ class MyPage(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        # r_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
-        r_data = player.df.loc[player.round_number].tolist()
-        group_id = get_group_id(player.id_in_group)
+        r_data = player.df.iloc[r_num-1]
         return dict(
-            ID=r_num,
-            group_id = group_id,
-            content_weibo=r_data[1],
-            predict_weibo_sen = r_data[2],
-            # 放进AI置信度
-            AI_predict_rate = "4",
-            # 可解释性导入
-            # image_path='lime_imgs/lime_exp{}.png'.format(player.random_list[player.id_in_group-1][r_num-1]),
-            image_path='lime_imgs/lime_exp{}.png'.format(player.round_number),
+            ID=r_num, # 轮数
+            group_id = get_group_id(player.id_in_group),
+            content_weibo=r_data['text'],
+            predict_weibo_sen = r_data['pred_str'], # 预测类
+            AI_predict_rate = str(r_data['main_emotion_confidence(1-5)_AI']), # AI置信度
+            image_path='lime_imgs/lime_exp{}.png'.format(r_num-1), # 可解释性导入
             icon_path='starIcon.png',
             )
-    # @staticmethod
-    # def before_next_page(player, timeout_happened):
-    #     r_num = player.round_number
-    #     ID = player.random_list[player.id_in_group-1][r_num-1]
-    #     round_data = player.df.loc[player.random_list[player.id_in_group-1][r_num-1]].tolist()
-    #     round_content = round_data[1]
-    #     round_result = player.sen_result
-    #     group_id = get_group_id(player.id_in_group)
-    #     # 是否选择将样本添加训练
-    #     train_change = player.change_sample
-    #     AI_confidence = player.AI_confidence
-    #     Human_confidence = player.Human_confidence
-    #     current_df = player.player_data[player.id_in_group-1]
-    #     current_df.loc[len(current_df)] = [ID,round_content,r_num,round_result,player.id_in_group,group_id,train_change,AI_confidence,Human_confidence]
-    #     if r_num == 100:
-    #         current_df = current_df.sort_values(by='ID',ascending=True)
-    #         current_df.to_csv("./watchdog_trainer/csv/%d_%s.csv" % (player.id_in_group,group_id),index=False)
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        r_num = player.round_number
+        r_data = player.df.iloc[r_num-1]
+        # 写入用户的数据
+        player.player_train.loc[len(player.player_train)] = [
+            r_num,
+            r_data['text'],
+            player.sen_result,
+            player.id_in_group,
+            get_group_id(player.id_in_group),
+            player.AI_confidence,
+            player.Human_confidence
+        ]
+        if r_num == 32: # 保存用户的数据
+            current_df = player.player_train[player.player_train['id']==player.id_in_group]
+            current_df.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+            player.player_train.drop(current_df.index,inplace=True) # 减少存储开销
     @staticmethod
     def is_displayed(player):
         group_id = get_group_id(player.id_in_group)
@@ -232,7 +250,7 @@ class MyPage(Page):
 '''Attention Check页面'''
 class MyAC(Page):
     form_model = 'player'
-    form_fields = ['ac_result']
+    form_fields = ['sen_result']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
@@ -242,13 +260,11 @@ class MyAC(Page):
         )
     @staticmethod
     def before_next_page(player, timeout_happened):
-        round_num = player.round_number
-        if round_num == 16:
-            round_result = player.ac_result
-            group_id = get_group_id(player.id_in_group)
-            player.player_ac.loc[len(player.player_ac.index)] = [round_num,round_result,player.id_in_group,group_id]
-            # player.player_ac.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/attention_check/attention_check.csv", index=False)
-            player.player_ac.to_csv("./watchdog_trainer/attention_check/attention_check.csv", index=False)
+        r_num = player.round_number
+        if r_num == 16: # 保存数据
+            player.player_ac.loc[len(player.player_ac)] = [r_num,player.sen_result,player.id_in_group,get_group_id(player.id_in_group)]
+            player.player_ac.to_csv(player.c.ATTENTION_CHECK_CSV_PATH + "attention_check.csv", index=False)
+    @staticmethod
     def is_displayed(player):
         return player.round_number == 16
 
@@ -259,29 +275,32 @@ class MyTest(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
-        r_data = player.df.loc[r_num-1].tolist()
+        r_data = player.df.iloc[r_num-1]
         return dict(
             ID=r_num-32,
-            content_weibo=r_data[1],
-            predict_weibo_sen = r_data[2]
+            content_weibo=r_data['text'],
+            icon_path='starIcon.png'
         )
     @staticmethod
-    def before_next_page(player, timeout_happened):
+    def before_next_page(player, timeout_happened): # 写入和保存至test_csv
         r_num = player.round_number
-        round_data = player.df.loc[r_num-1].tolist()
-        round_content = round_data[1]
-        round_result = player.sen_result
-        group_id = get_group_id(player.id_in_group)
-        current_df = player.player_data[player.id_in_group-1]
-        current_df.loc[len(current_df)] = [r_num-1,round_content,r_num,round_result,player.id_in_group,group_id,None,None,None]
+        r_data = player.df.iloc[r_num-1]
+        # 保存数据，字段同上
+        player.player_test.loc[len(player.player_test)] = [
+            r_num,
+            r_data['text'],
+            player.sen_result,
+            player.id_in_group,
+            get_group_id(player.id_in_group),
+            player.Human_confidence
+        ]
         if r_num == 64:
-            current_df = current_df.iloc[-20:,:]
-            current_df = current_df.sort_values(by='ID',ascending=True)
-            # current_df.to_csv("/home/ubuntu/Otree_Project/Co-Learning/watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group, group_id), index=False)
-            current_df.to_csv("./watchdog_trainer/csv/%d_%s_test_manual.csv" % (player.id_in_group, group_id), index=False)
+            current_df = player.player_test[player.player_test['id']==player.id_in_group]
+            current_df.to_csv(player.c.TEST_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+            player.player_test.drop(current_df.index,inplace=True) # 减少存储开销
+    @staticmethod
     def is_displayed(player):
         return player.round_number > 32
-
 
 '''32条标注后提示界面'''
 class ResultWaitPage(Page):
@@ -296,9 +315,9 @@ class ExitSurveyPage(Page):
     @staticmethod
     def get_form_fields(player):
         group_id = get_group_id(player.id_in_group)
-        if group_id == "A" or group_id == 'B' or group_id == 'C':
+        if group_id in "ABD": # without AI explanation,不展示问题7
             return ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q8",'advice']
-        elif group_id == 'D':
+        elif group_id in 'CE': # with AI explanation,展示问题7
             return ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q7","Q8",'advice']
     @staticmethod
     def vars_for_template(player):
@@ -306,18 +325,12 @@ class ExitSurveyPage(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == 64
-    # 薪酬部分可能需要改一改
     @staticmethod
     def before_next_page(player, timeout_happened):
         group_id = get_group_id(player.id_in_group)
         bonus = Bonus(id_in_group=player.id_in_group,group_id=group_id)
-        # 应该不需要了？
-        # if group_id in ['A','D']:
-        #     while not bonus.flag:
-        #         bonus.manual_csv_name_check()
-        # elif group_id in ['B','C','E','F']:
-        #     while not bonus.flag:
-        #         bonus.model_csv_name_check()
+        bonus.manual_csv_name_check()
+        time.sleep(1) # 阻塞一秒，防止用户提交的csv没有完全写入
 
 '''展示报酬界面'''
 class RewardPage(Page):
@@ -330,8 +343,6 @@ class RewardPage(Page):
         group_id = get_group_id(player.id_in_group)
         bonus = Bonus(id_in_group=player.id_in_group,group_id=group_id)
         reward = bonus.calculate_bonus()
-        # 清除数据
-        player.player_data[player.id_in_group-1] = None
         return dict( reward=reward )
 
 page_sequence = [Introduction,PrePage,MyPage,MyAC,MyTest,ResultWaitPage,ExitSurveyPage,RewardPage]
