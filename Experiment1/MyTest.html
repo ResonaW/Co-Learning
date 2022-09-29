@@ -1,10 +1,25 @@
-
 {{ block content }}
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <title>Human-AI Co-Learning</title>
+        <style>
+            .first {
+                width: 50%;
+                float:left;
+                height: 50px;
+                /* border: 1px solid #3B6273;
+                border-radius:25px; */
+            }
+            .second {
+                width: 50%;
+                float:left;
+                height: 50px;
+                /* border: 1px solid #3B6273;
+                border-radius:25px; */
+            }
+        </style>
         <style>
              @import url(http://fonts.googleapis.com/css?family=Lato:400,700,900);
             .form {
@@ -79,7 +94,7 @@
         function uploaddata(){
             var answer = $("input[name='place1']:checked").val();
             var human_confi = $("input[name='rating2']:checked").val();
-            document.getElementById("sen_result_pre").value=answer;
+            document.getElementById("sen_result").value=answer;
             document.getElementById("Human_confidence").value=human_confi;
         }
     </script>
@@ -165,6 +180,45 @@
 
 </div>
 </div>
+
+<!-- 星星的样式 -->
+<style>
+    .star{
+        display: block;
+        position: relative;
+        width: 150px;
+        height: 60px;
+        padding: 0;
+        border: none;
+    }
+     
+    .star > input{
+        position: absolute;
+        margin-right: -100%;
+        opacity: 0;
+    }
+     
+    .star > label{
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: 30px;
+        height: 30px;
+        color: transparent;
+        background-image: url("{{ static icon_path }}");
+        background-repeat: no-repeat;
+    }
+
+    .star > input:focus + label{
+        outline: none;
+    }
+     
+    .star > input:checked~label,
+    .star > input:focus~label,
+    .star > input:hover~label{
+        background-position: 0 -30px; 
+    }
+    </style>
 
     {{ formfield_errors 'sen_result' }}
     {{ formfield_errors 'Human_confidence' }}

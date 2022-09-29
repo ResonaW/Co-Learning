@@ -64,7 +64,7 @@ class C(BaseConstants):
     PRELABEL_CSV_PATH  = './watchdog_trainer/prelabel_csv/'
     TRAIN_CSV_PATH = './watchdog_trainer/train_csv/' 
     TEST_CSV_PATH = './watchdog_trainer/test_csv/' 
-    ATTENTION_CHECK_CSV_PATH = './watchdog_trainer/attention_check_csv/'
+    OTHER_CSV_PATH = './watchdog_trainer/other_csv/'
 
 class Subsession(BaseSubsession):
     pass
@@ -85,62 +85,83 @@ class Player(BasePlayer):
     player_test = pd.DataFrame(columns=["round", "text", "label", "id", "group", "Human_confidence"])
     # 用户Attention Check结果dataframe
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
+    # 用户Survey结果dataframe
+    player_survey = pd.DataFrame(columns=['id','age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q7",'advice'])
     # ----------以下为fields----------
     sen_result = models.IntegerField()  # 用户情感判断结果
     AI_confidence = models.IntegerField() # AI置信度
     Human_confidence = models.IntegerField() # 人类置信度
     # SurveyPage问题
-    age = models.IntegerField(
-        label='您的年龄段是?',
-        choices=[['1', '18岁以下'], ['2', '18-25岁'], ['3', '26-30岁'], ['4', '31-35岁'], ['5', '35岁以上']],
-    )
+    age = models.IntegerField(label='你的年龄是？', min=0, max=125)
     gender = models.StringField(
         choices=[['1', '男性'], ['2', '女性']],
         label='您的性别是?',
+        widget=widgets.RadioSelect,
     )
     education = models.StringField(
         choices=[['1', '高中'], ['2', '大专'], ['3', '本科'], ['4', '硕士'], ['5', '博士及以上']],
         label='您的教育程度是?',
+        widget=widgets.RadioSelect,
+    )
+    crt_bat = models.IntegerField(
+        label='''
+        一个球拍和一个球总共花费22元。
+        球拍相比于球要贵20元，
+        那么请问买一个球需要多少钱呢?'''
+    )
+    crt_widget = models.IntegerField(
+        label='''
+        如果5台机器5分钟生产5个小部件,
+        100台机器生产100个小部件需要多少分钟?
+        '''
+    )
+    crt_lake = models.IntegerField(
+        label='''
+        在一个湖里，有一小片睡莲。
+        每一天睡莲的大小都会翻倍.
+        如果睡莲一共需要生长48天才能覆盖整片湖泊,
+        那么请问睡莲需要花费多少天才能覆盖半个湖面?
+        '''
     )
     Q1 = models.IntegerField(
         label='我觉得这项任务需要集中精神：',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     Q2 = models.IntegerField(
         label='我觉得成功地完成了我所需要完成的任务：',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     Q3 = models.IntegerField(
         label='在标注过程中，我会感到有压力、不安全、气馁、易怒和生气：',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     Q4 = models.IntegerField(
         label='我相信AI能够根据评论内容做出正确的分类：',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     attention = models.IntegerField(
         label='这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请选择“非常反对”这一选项。',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     Q5 = models.IntegerField(
         label='我相信我的标注显着提高了 AI 在文本分类方面的准确性：',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     Q6 = models.IntegerField(
         label='我觉得我对人工智能的工作原理有了很好的理解：',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     Q7 = models.IntegerField(
-        label='我觉得我很好地理解了 AI 将评论分类的理由：',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']]
-    )
-    Q8 = models.IntegerField(
-        label='现有以下三种薪酬计算方式：'
-              '1、根据你在第二阶段的表现计算薪酬。'
-              '2、根据AI在第二阶段的表现计算薪酬。'
-              '3、根据你和AI在第二阶段的综合表现计算薪酬。'
-              '如果可以选择，你会选择采用哪种计算方式来计算你最后的薪酬？',
-        choices=[['1', '第一种'], ['2', '第二种'], ['3', '第三种']]
+        label='我觉得我很好地理解了 AI 将微博分类的理由：',
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
     )
     advice = models.StringField(label="您是否有其它的建议或意见，或者谈谈您对实验的感受？")
 
@@ -155,7 +176,9 @@ class Introduction(Page):
     @staticmethod
     def vars_for_template(player):
         group_id = get_group_id(player.id_in_group)
-        return dict(id=group_id)
+        return dict(id=group_id,
+                    explaination_path='explaination.png'
+                    )
 
 '''首次标注界面（不展示AI）'''
 class PrePage(Page):
@@ -190,9 +213,9 @@ class PrePage(Page):
                 player.Human_confidence
             ]
             if r_num == 32: # 保存用户的数据
-                current_df = player.player_train[player.player_train['id']==player.id_in_group]
-                current_df.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
-                player.player_train.drop(current_df.index,inplace=True) # 减少存储开销
+                current_df_pre = player.player_train[player.player_train['id']==player.id_in_group]
+                current_df_pre.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+                # player.player_train.drop(current_df_pre.index,inplace=True) # 减少存储开销
         else:
             player.player_prelabel.loc[len(player.player_prelabel)] = [
                 r_num,
@@ -203,9 +226,9 @@ class PrePage(Page):
                 player.Human_confidence
             ]
             if r_num == 32: # 保存用户的数据
-                current_df = player.player_prelabel[player.player_prelabel['id']==player.id_in_group]
-                current_df.to_csv(player.c.PRELABEL_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
-                player.player_prelabel.drop(current_df.index,inplace=True) # 减少存储开销
+                current_df_pre = player.player_prelabel[player.player_prelabel['id']==player.id_in_group]
+                current_df_pre.to_csv(player.c.PRELABEL_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+                # player.player_prelabel.drop(current_df_pre.index,inplace=True) # 减少存储开销
 
 '''预测32条文本情感页面'''
 class MyPage(Page):
@@ -239,9 +262,9 @@ class MyPage(Page):
             player.Human_confidence
         ]
         if r_num == 32: # 保存用户的数据
-            current_df = player.player_train[player.player_train['id']==player.id_in_group]
-            current_df.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
-            player.player_train.drop(current_df.index,inplace=True) # 减少存储开销
+            current_df_train = player.player_train[player.player_train['id']==player.id_in_group]
+            current_df_train.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+            # player.player_train.drop(current_df_train.index,inplace=True) # 减少存储开销
     @staticmethod
     def is_displayed(player):
         group_id = get_group_id(player.id_in_group)
@@ -263,7 +286,7 @@ class MyAC(Page):
         r_num = player.round_number
         if r_num == 16: # 保存数据
             player.player_ac.loc[len(player.player_ac)] = [r_num,player.sen_result,player.id_in_group,get_group_id(player.id_in_group)]
-            player.player_ac.to_csv(player.c.ATTENTION_CHECK_CSV_PATH + "attention_check.csv", index=False)
+            player.player_ac.to_csv(player.c.OTHER_CSV_PATH + "attention_check.csv", index=False)
     @staticmethod
     def is_displayed(player):
         return player.round_number == 16
@@ -295,9 +318,9 @@ class MyTest(Page):
             player.Human_confidence
         ]
         if r_num == 64:
-            current_df = player.player_test[player.player_test['id']==player.id_in_group]
-            current_df.to_csv(player.c.TEST_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
-            player.player_test.drop(current_df.index,inplace=True) # 减少存储开销
+            current_df_test = player.player_test[player.player_test['id']==player.id_in_group]
+            current_df_test.to_csv(player.c.TEST_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
+            player.player_test.drop(current_df_test.index,inplace=True) # 减少存储开销
     @staticmethod
     def is_displayed(player):
         return player.round_number > 32
@@ -316,18 +339,25 @@ class ExitSurveyPage(Page):
     def get_form_fields(player):
         group_id = get_group_id(player.id_in_group)
         if group_id in "ABD": # without AI explanation,不展示问题7
-            return ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q8",'advice']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q5','Q6','advice']
         elif group_id in 'CE': # with AI explanation,展示问题7
-            return ['age','gender','education','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q7","Q8",'advice']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q7",'advice']
     @staticmethod
     def vars_for_template(player):
-        return dict( num=player.round_number )
+        return dict( num=player.round_number,
+                     group_id = get_group_id(player.id_in_group),
+                     )
     @staticmethod
     def is_displayed(player):
         return player.round_number == 64
     @staticmethod
     def before_next_page(player, timeout_happened):
         group_id = get_group_id(player.id_in_group)
+        if group_id in "ABD":
+            player.player_survey.loc[len(player.player_survey)] = [player.id_in_group,player.age,player.gender,player.education,player.crt_bat,player.crt_widget,player.crt_lake,player.Q1,player.Q2,player.Q3,player.Q4,player.attention,player.Q5,player.Q6,None,player.advice]
+        elif group_id in 'CE':
+            player.player_survey.loc[len(player.player_survey)] = [player.id_in_group,player.age,player.gender,player.education,player.crt_bat,player.crt_widget,player.crt_lake,player.Q1,player.Q2,player.Q3,player.Q4,player.attention,player.Q5,player.Q6,player.Q7,player.advice]
+        player.player_survey.to_csv(player.c.OTHER_CSV_PATH + "survey.csv", index=False)
         bonus = Bonus(id_in_group=player.id_in_group,group_id=group_id)
         bonus.manual_csv_name_check()
         time.sleep(1) # 阻塞一秒，防止用户提交的csv没有完全写入

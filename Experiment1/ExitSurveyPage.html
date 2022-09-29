@@ -4,7 +4,116 @@
     <p>
         请结合你的标注体验回答以下问题。
     </p>
-    {{ formfields }}
+
+    {{ formfield 'age' }}
+    {{ formfield 'gender' }}
+    {{ formfield 'education' }}
+    {{ formfield 'crt_bat' }}
+    {{ formfield 'crt_widget' }}
+    {{ formfield 'crt_lake' }}
+
+    <table class="table">
+        <tr>
+            <td>我觉得这项任务需要集中精神：</td>
+                <td>
+                    非常反对 &nbsp;
+                    {{ for choice in form.Q1 }}
+                        {{ choice }}
+                    {{ endfor }}
+                    &nbsp; 非常赞同
+                </td>
+        </tr>
+        <tr>
+            <td>我觉得成功地完成了我所需要完成的任务:</td>
+                <td>
+                    非常反对 &nbsp;
+                    {{ for choice in form.Q2 }}
+                        {{ choice }}
+                    {{ endfor }}
+                    &nbsp; 非常赞同
+                </td>
+        </tr>
+        <tr>
+            <td>在标注过程中，我会感到有压力、不安全、气馁、易怒和生气：</td>
+                <td>
+                    非常反对 &nbsp;
+                    {{ for choice in form.Q3 }}
+                        {{ choice }}
+                    {{ endfor }}
+                    &nbsp; 非常赞同
+                </td>
+        </tr>
+        <tr>
+            <td>我相信AI能够根据评论内容做出正确的分类:</td>
+                <td>
+                    非常反对 &nbsp;
+                    {{ for choice in form.Q4 }}
+                        {{ choice }}
+                    {{ endfor }}
+                    &nbsp; 非常赞同
+                </td>
+        </tr>
+        <tr>
+            <td>这是一道注意力测试题，为表明你在本次实验中认真审题作答<br>，请选择“非常反对”这一选项。</td>
+                <td>
+                    非常反对 &nbsp;
+                    {{ for choice in form.attention }}
+                        {{ choice }}
+                    {{ endfor }}
+                    &nbsp; 非常赞同
+                </td>
+        </tr>
+        <tr>
+            <td>我相信我的标注显着提高了 AI 在文本分类方面的准确性：</td>
+                <td>
+                    非常反对 &nbsp;
+                    {{ for choice in form.Q5 }}
+                        {{ choice }}
+                    {{ endfor }}
+                    &nbsp; 非常赞同
+                </td>
+        </tr>
+        <tr>
+            <td>我觉得我对人工智能的工作原理有了很好的理解：</td>
+                <td>
+                    非常反对 &nbsp;
+                    {{ for choice in form.Q6 }}
+                        {{ choice }}
+                    {{ endfor }}
+                    &nbsp; 非常赞同
+                </td>
+        </tr>
+
+
+        {{ if group_id == "C" }}
+            <tr>
+                <td>我觉得我很好地理解了 AI 将微博分类的理由：</td>
+                    <td>
+                        非常反对 &nbsp;
+                        {{ for choice in form.Q7 }}
+                            {{ choice }}
+                        {{ endfor }}
+                        &nbsp; 非常赞同
+                    </td>
+            </tr>
+        {{ elif group_id == "E" }}
+            <tr>
+                <td>我觉得我很好地理解了 AI 将微博分类的理由：</td>
+                    <td>
+                        非常反对 &nbsp;
+                        {{ for choice in form.Q7 }}
+                            {{ choice }}
+                        {{ endfor }}
+                        &nbsp; 非常赞同
+                    </td>
+            </tr>
+        {{ endif }}
+
+    </table>
+
+    {{ formfield 'advice' }}
+
+    
     <button class="otree-btn-next btn btn-primary">提交问卷</button>
 
 {{ endblock }}
