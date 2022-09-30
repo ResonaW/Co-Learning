@@ -1,4 +1,4 @@
-
+{{ block title }}微博情感标注{{ endblock }}
 {{ block content }}
 <!DOCTYPE html>
 <html>
@@ -101,7 +101,7 @@
     </script>
 </html>
 
-<h3 align="center">The Co-design of an AI-Human Annotation Tool</h3>
+<h3 align="center">微博情感标注</h3>
 
 <hr>
 
@@ -179,7 +179,11 @@
 
         <br>
         <br>
+        {{ if id == "A" }}
         <button class="button-submit" onclick="uploaddata()">提交</button>
+        {{ else }}
+        <button class="button-submit" onclick="uploaddata()">查看AI结果</button>
+        {{ endif }}
 
     <input type="hidden" name="sen_result" id="sen_result" />
     <input type="hidden" name="Human_confidence" id="Human_confidence" />

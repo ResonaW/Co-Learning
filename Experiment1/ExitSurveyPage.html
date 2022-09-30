@@ -4,6 +4,57 @@
     <p>
         请结合你的标注体验回答以下问题。
     </p>
+    <style>
+        .first {
+            width: 50%;
+            float:left;
+            height: 50px;
+            /* border: 1px solid #3B6273;
+            border-radius:25px; */
+        }
+        .second {
+            width: 50%;
+            float:left;
+            height: 50px;
+            /* border: 1px solid #3B6273;
+            border-radius:25px; */
+        }
+        .star{
+        display: block;
+        position: relative;
+        width: 150px;
+        height: 60px;
+        padding: 0;
+        border: none;
+    }
+     
+    .star > input{
+        position: absolute;
+        margin-right: -100%;
+        opacity: 0;
+    }
+     
+    .star > label{
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: 30px;
+        height: 30px;
+        color: transparent;
+        background-image: url("{{ static icon_path }}");
+        background-repeat: no-repeat;
+    }
+
+    .star > input:focus + label{
+        outline: none;
+    }
+     
+    .star > input:checked~label,
+    .star > input:focus~label,
+    .star > input:hover~label{
+        background-position: 0 -30px; 
+    }
+    </style>
 
     {{ formfield 'age' }}
     {{ formfield 'gender' }}
@@ -12,110 +63,307 @@
     {{ formfield 'crt_widget' }}
     {{ formfield 'crt_lake' }}
 
-    <table class="table">
-        <tr>
-            <td>我觉得这项任务需要集中精神：</td>
-                <td>
-                    非常反对 &nbsp;
-                    {{ for choice in form.Q1 }}
-                        {{ choice }}
-                    {{ endfor }}
-                    &nbsp; 非常赞同
-                </td>
-        </tr>
-        <tr>
-            <td>我觉得成功地完成了我所需要完成的任务:</td>
-                <td>
-                    非常反对 &nbsp;
-                    {{ for choice in form.Q2 }}
-                        {{ choice }}
-                    {{ endfor }}
-                    &nbsp; 非常赞同
-                </td>
-        </tr>
-        <tr>
-            <td>在标注过程中，我会感到有压力、不安全、气馁、易怒和生气：</td>
-                <td>
-                    非常反对 &nbsp;
-                    {{ for choice in form.Q3 }}
-                        {{ choice }}
-                    {{ endfor }}
-                    &nbsp; 非常赞同
-                </td>
-        </tr>
-        <tr>
-            <td>我相信AI能够根据评论内容做出正确的分类:</td>
-                <td>
-                    非常反对 &nbsp;
-                    {{ for choice in form.Q4 }}
-                        {{ choice }}
-                    {{ endfor }}
-                    &nbsp; 非常赞同
-                </td>
-        </tr>
-        <tr>
-            <td>这是一道注意力测试题，为表明你在本次实验中认真审题作答<br>，请选择“非常反对”这一选项。</td>
-                <td>
-                    非常反对 &nbsp;
-                    {{ for choice in form.attention }}
-                        {{ choice }}
-                    {{ endfor }}
-                    &nbsp; 非常赞同
-                </td>
-        </tr>
-        <tr>
-            <td>我相信我的标注显着提高了 AI 在文本分类方面的准确性：</td>
-                <td>
-                    非常反对 &nbsp;
-                    {{ for choice in form.Q5 }}
-                        {{ choice }}
-                    {{ endfor }}
-                    &nbsp; 非常赞同
-                </td>
-        </tr>
-        <tr>
-            <td>我觉得我对人工智能的工作原理有了很好的理解：</td>
-                <td>
-                    非常反对 &nbsp;
-                    {{ for choice in form.Q6 }}
-                        {{ choice }}
-                    {{ endfor }}
-                    &nbsp; 非常赞同
-                </td>
-        </tr>
+    <div>
+        <div class="first" align="center" >我觉得这项任务需要集中精神：</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate15" name="ask1" value="5">
+                    <label for="rate15" title="Amazing"></label>
+             
+                    <input type="radio" id="rate14" name="ask1" value="4">
+                    <label for="rate14" title="Good"></label>
+             
+                    <input type="radio" id="rate13" name="ask1" value="3">
+                    <label for="rate13" title="Average"></label>
+             
+                    <input type="radio" id="rate12" name="ask1" value="2">
+                    <label for="rate12" title="Not good"></label>
+             
+                    <input type="radio" id="rate11" name="ask1" value="1">
+                    <label for="rate11" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <div>
+        <div class="first" align="center" >我觉得成功地完成了我所需要完成的任务:</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate25" name="ask2" value="5">
+                    <label for="rate25" title="Amazing"></label>
+             
+                    <input type="radio" id="rate24" name="ask2" value="4">
+                    <label for="rate24" title="Good"></label>
+             
+                    <input type="radio" id="rate23" name="ask2" value="3">
+                    <label for="rate23" title="Average"></label>
+             
+                    <input type="radio" id="rate22" name="ask2" value="2">
+                    <label for="rate22" title="Not good"></label>
+             
+                    <input type="radio" id="rate21" name="ask2" value="1">
+                    <label for="rate21" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        {{ if group_id == "C" }}
-            <tr>
-                <td>我觉得我很好地理解了 AI 将微博分类的理由：</td>
-                    <td>
-                        非常反对 &nbsp;
-                        {{ for choice in form.Q7 }}
-                            {{ choice }}
-                        {{ endfor }}
-                        &nbsp; 非常赞同
-                    </td>
-            </tr>
-        {{ elif group_id == "E" }}
-            <tr>
-                <td>我觉得我很好地理解了 AI 将微博分类的理由：</td>
-                    <td>
-                        非常反对 &nbsp;
-                        {{ for choice in form.Q7 }}
-                            {{ choice }}
-                        {{ endfor }}
-                        &nbsp; 非常赞同
-                    </td>
-            </tr>
-        {{ endif }}
+    <div>
+        <div class="first" align="center" >在标注过程中，我会感到有压力、易怒和生气：</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate35" name="ask3" value="5">
+                    <label for="rate35" title="Amazing"></label>
+             
+                    <input type="radio" id="rate34" name="ask3" value="4">
+                    <label for="rate34" title="Good"></label>
+             
+                    <input type="radio" id="rate33" name="ask3" value="3">
+                    <label for="rate33" title="Average"></label>
+             
+                    <input type="radio" id="rate32" name="ask3" value="2">
+                    <label for="rate32" title="Not good"></label>
+             
+                    <input type="radio" id="rate31" name="ask3" value="1">
+                    <label for="rate31" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    </table>
+    <div>
+        <div class="first" align="center" >我觉得AI能够根据评论内容做出正确的分类:</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate45" name="ask4" value="5">
+                    <label for="rate45" title="Amazing"></label>
+             
+                    <input type="radio" id="rate44" name="ask4" value="4">
+                    <label for="rate44" title="Good"></label>
+             
+                    <input type="radio" id="rate43" name="ask4" value="3">
+                    <label for="rate43" title="Average"></label>
+             
+                    <input type="radio" id="rate42" name="ask4" value="2">
+                    <label for="rate42" title="Not good"></label>
+             
+                    <input type="radio" id="rate41" name="ask4" value="1">
+                    <label for="rate41" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    {{ formfield 'advice' }}
+    <div>
+        <div class="first" align="center" >请选择“非常反对”这一选项。</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate55" name="attention" value="5">
+                    <label for="rate55" title="Amazing"></label>
+             
+                    <input type="radio" id="rate54" name="attention" value="4">
+                    <label for="rate54" title="Good"></label>
+             
+                    <input type="radio" id="rate53" name="attention" value="3">
+                    <label for="rate53" title="Average"></label>
+             
+                    <input type="radio" id="rate52" name="attention" value="2">
+                    <label for="rate52" title="Not good"></label>
+             
+                    <input type="radio" id="rate51" name="attention" value="1">
+                    <label for="rate51" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <div class="first" align="center" >我觉得我的标注提高了AI在情感分类方面的准确性：</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate65" name="ask5" value="5">
+                    <label for="rate65" title="Amazing"></label>
+             
+                    <input type="radio" id="rate64" name="ask5" value="4">
+                    <label for="rate64" title="Good"></label>
+             
+                    <input type="radio" id="rate63" name="ask5" value="3">
+                    <label for="rate63" title="Average"></label>
+             
+                    <input type="radio" id="rate62" name="ask5" value="2">
+                    <label for="rate62" title="Not good"></label>
+             
+                    <input type="radio" id="rate61" name="ask5" value="1">
+                    <label for="rate61" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <div class="first" align="center" >我觉得我对AI的工作原理有了更多理解：</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate75" name="ask6" value="5">
+                    <label for="rate75" title="Amazing"></label>
+             
+                    <input type="radio" id="rate74" name="ask6" value="4">
+                    <label for="rate74" title="Good"></label>
+             
+                    <input type="radio" id="rate73" name="ask6" value="3">
+                    <label for="rate73" title="Average"></label>
+             
+                    <input type="radio" id="rate72" name="ask6" value="2">
+                    <label for="rate72" title="Not good"></label>
+             
+                    <input type="radio" id="rate71" name="ask6" value="1">
+                    <label for="rate71" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <div class="first" align="center" >相比于实验前，我觉得我能够更好完成情感标注任务：</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate85" name="ask7" value="5">
+                    <label for="rate85" title="Amazing"></label>
+             
+                    <input type="radio" id="rate84" name="ask7" value="4">
+                    <label for="rate84" title="Good"></label>
+             
+                    <input type="radio" id="rate83" name="ask7" value="3">
+                    <label for="rate83" title="Average"></label>
+             
+                    <input type="radio" id="rate82" name="ask7" value="2">
+                    <label for="rate82" title="Not good"></label>
+             
+                    <input type="radio" id="rate81" name="ask7" value="1">
+                    <label for="rate81" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{ if group_id == "C" }}
+    <div>
+        <div class="first" align="center" >我觉得我理解了AI将微博分类的理由：</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate95" name="ask8" value="5">
+                    <label for="rate95" title="Amazing"></label>
+             
+                    <input type="radio" id="rate94" name="ask8" value="4">
+                    <label for="rate94" title="Good"></label>
+             
+                    <input type="radio" id="rate93" name="ask8" value="3">
+                    <label for="rate93" title="Average"></label>
+             
+                    <input type="radio" id="rate92" name="ask8" value="2">
+                    <label for="rate92" title="Not good"></label>
+             
+                    <input type="radio" id="rate91" name="ask8" value="1">
+                    <label for="rate91" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <input type="hidden" name="Q7" id="Q7" />
+    {{ elif group_id == "E" }}
+    <div>
+        <div class="first" align="center" >我觉得我理解了AI将微博分类的理由：</div>
+        <div class="second" align="center" >
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate95" name="ask8" value="5">
+                    <label for="rate95" title="Amazing"></label>
+             
+                    <input type="radio" id="rate94" name="ask8" value="4">
+                    <label for="rate94" title="Good"></label>
+             
+                    <input type="radio" id="rate93" name="ask8" value="3">
+                    <label for="rate93" title="Average"></label>
+             
+                    <input type="radio" id="rate92" name="ask8" value="2">
+                    <label for="rate92" title="Not good"></label>
+             
+                    <input type="radio" id="rate91" name="ask8" value="1">
+                    <label for="rate91" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <input type="hidden" name="Q7" id="Q7" />
+    {{ endif }}
+
+    <script>
+        var id = {{ group_id }}
+        function uploaddata(){
+            var question1 = $("input[name='ask1']:checked").val();
+            var question2 = $("input[name='ask2']:checked").val();
+            var question3 = $("input[name='ask3']:checked").val();
+            var question4 = $("input[name='ask4']:checked").val();
+            var question5 = $("input[name='ask5']:checked").val();
+            var question6 = $("input[name='ask6']:checked").val();
+            var question8 = $("input[name='ask7']:checked").val();
+            var question7 = $("input[name='ask8']:checked").val();
+            var attention = $("input[name='attention']:checked").val();
+            document.getElementById("Q1").value=question1;
+            document.getElementById("Q2").value=question2;
+            document.getElementById("Q3").value=question3;
+            document.getElementById("Q4").value=question4;
+            document.getElementById("Q5").value=question5;
+            document.getElementById("Q6").value=question6;
+            if(id == 'C'){
+                document.getElementById("Q7").value = question7;
+            }
+            if(id == 'E'){
+                document.getElementById("Q7").value = question7;
+            }
+            document.getElementById("Q7").value = question7;
+            document.getElementById("Q8").value=question8;
+            document.getElementById("attention").value=attention;
+        }
+    </script>
+
+    <input type="hidden" name="Q1" id="Q1" />
+    <input type="hidden" name="Q2" id="Q2" />
+    <input type="hidden" name="Q3" id="Q3" />
+    <input type="hidden" name="Q4" id="Q4" />
+    <input type="hidden" name="Q5" id="Q5" />
+    <input type="hidden" name="Q6" id="Q6" />
+    <input type="hidden" name="Q8" id="Q8" />
+    <input type="hidden" name="attention" id="attention" />
+    {{ formfield_errors 'Q1' }}
+    {{ formfield_errors 'Q2' }}
+    {{ formfield_errors 'Q3' }}
+    {{ formfield_errors 'Q4' }}
+    {{ formfield_errors 'Q5' }}
+    {{ formfield_errors 'Q6' }}
+    {{ if group_id == "C" }}
+        {{ formfield_errors 'Q7' }}
+    {{ elif group_id == "E" }}
+        {{ formfield_errors 'Q7' }}
+    {{ endif }}
+    {{ formfield_errors 'Q8' }}
+    {{ formfield_errors 'attention' }}
 
     
-    <button class="otree-btn-next btn btn-primary">提交问卷</button>
+    <button class="otree-btn-next btn btn-primary"  onclick="uploaddata()" align="center">提交问卷</button>
 
 {{ endblock }}
+
+
 
 

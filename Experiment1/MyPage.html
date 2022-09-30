@@ -1,4 +1,4 @@
-
+{{ block title }}微博情感标注{{ endblock }}
 {{ block content }}
 <!DOCTYPE html>
 <html>
@@ -103,7 +103,7 @@
     </script>
 </html>
 
-<h3 align="center">The Co-design of an AI-Human Annotation Tool</h3>
+<h3 align="center">微博情感标注</h3>
 
 <hr>
 
@@ -183,8 +183,8 @@
                             </div>
                         </div>
                         <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
-                        <h2>以下为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高:</h2>
-                        <h1><img src="{{ static image_path }}" id="xalimg"/></h1>  
+                        <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                        <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>  
                     </div>
                 </body>
                 <br>
@@ -247,8 +247,8 @@
                             </div>
                         </div>
                         <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
-                        <h2>以下为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高:</h2>
-                        <h1><img src="{{ static image_path }}" id="xalimg"/></h1>  
+                        <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                        <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>    
                     </div>
                 </body>
                 <br>
@@ -412,7 +412,12 @@
         }  
         if (confidence_AI == '5') {
             document.getElementById("rate555").checked="checked";
-        }  
+        }
+        document.getElementById("rate111").disabled=true;
+        document.getElementById("rate222").disabled=true;
+        document.getElementById("rate333").disabled=true; 
+        document.getElementById("rate444").disabled=true; 
+        document.getElementById("rate555").disabled=true;  
     }
 </script>
     {{ formfield_errors 'sen_result' }}
