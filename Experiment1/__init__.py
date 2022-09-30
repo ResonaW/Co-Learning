@@ -38,7 +38,7 @@ class Bonus():
         self.group_id = group_id
         self.flag = False
         tmp_df = pd.read_excel("./Experiment1/dataset.xlsx")
-        self.TRUE_LABELS = tmp_df['label'].iloc[32:].to_list() # 验证集的ground truth标签
+        self.TRUE_LABELS = get_user_data(tmp_df,id_in_group)['label'].iloc[32:].to_list() # 验证集的ground truth标签
         self.CSV_PATH = './watchdog_trainer/test_csv/'
         self.manual_csv_name = self.CSV_PATH+"%d_%s.csv" % (self.id_in_group,self.group_id)
     '''检查csv文件是否存在 不存在时阻塞'''
@@ -97,7 +97,7 @@ class Player(BasePlayer):
     # 用户Attention Check结果dataframe
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
     # 用户Survey结果dataframe
-    player_survey = pd.DataFrame(columns=['id','age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q7"])
+    player_survey = pd.DataFrame(columns=['id','age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q6',"Q7","Q8"])
     # ----------以下为fields----------
     sen_result = models.IntegerField()  # 用户情感判断结果
     AI_confidence = models.IntegerField() # AI置信度
@@ -106,6 +106,7 @@ class Player(BasePlayer):
     age = models.IntegerField(
         label='您的年龄段是?',
         choices=[['1', '18岁以下'], ['2', '18-25岁'], ['3', '26-30岁'], ['4', '31-35岁'], ['5', '35岁以上']],
+        widget=widgets.RadioSelect,
     )
     gender = models.StringField(
         choices=[['1', '男性'], ['2', '女性']],
@@ -159,11 +160,6 @@ class Player(BasePlayer):
     )
     attention = models.IntegerField(
         label='这是一道注意力测试题，旨在检测志愿者在实验过程中是否认真审题、作答。为表明你在本次实验中认真审题、作答，请选择“非常反对”这一选项。',
-        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
-        widget=widgets.RadioSelect
-    )
-    Q5 = models.IntegerField(
-        label='我相信我的标注显着提高了 AI 在文本分类方面的准确性：',
         choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
         widget=widgets.RadioSelect
     )
@@ -300,9 +296,15 @@ class MyAC(Page):
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
+        r_data = get_user_data(player.df, player.id_in_group).iloc[r_num - 1]  # 随机抽取
         return dict(
-            ID=r_num,
-            icon_path='starIcon.png'
+            ID=r_num,  # 轮数
+            group_id=get_group_id(player.id_in_group),
+            content_weibo=r_data['text'],
+            predict_weibo_sen=r_data['pred_str'],  # 预测类
+            AI_predict_rate=str(r_data['main_emotion_confidence(1-5)_AI']),  # AI置信度
+            image_path='lime_imgs/lime_exp{}.png'.format(r_data['id']),  # 可解释性导入
+            icon_path='starIcon.png',
         )
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -344,7 +346,7 @@ class MyTest(Page):
         if r_num == 64:
             current_df_test = player.player_test[player.player_test['id']==player.id_in_group]
             current_df_test.to_csv(player.c.TEST_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
-            player.player_test.drop(current_df_test.index,inplace=True) # 减少存储开销
+            # player.player_test.drop(current_df_test.index,inplace=True) # 减少存储开销
     @staticmethod
     def is_displayed(player):
         return player.round_number > 32
@@ -363,9 +365,9 @@ class ExitSurveyPage(Page):
     def get_form_fields(player):
         group_id = get_group_id(player.id_in_group)
         if group_id in "ABD": # without AI explanation,不展示问题7
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q5','Q6','Q8']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q6','Q8']
         elif group_id in 'CE': # with AI explanation,展示问题7
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q5','Q6',"Q7",'Q8']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q6',"Q7",'Q8']
     @staticmethod
     def vars_for_template(player):
         return dict( num=player.round_number,
@@ -379,14 +381,16 @@ class ExitSurveyPage(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         group_id = get_group_id(player.id_in_group)
-        if group_id in "ABD":
-            player.player_survey.loc[len(player.player_survey)] = [player.id_in_group,player.age,player.gender,player.education,player.crt_bat,player.crt_widget,player.crt_lake,player.Q1,player.Q2,player.Q3,player.Q4,player.attention,player.Q5,player.Q6,None]
-        elif group_id in 'CE':
-            player.player_survey.loc[len(player.player_survey)] = [player.id_in_group,player.age,player.gender,player.education,player.crt_bat,player.crt_widget,player.crt_lake,player.Q1,player.Q2,player.Q3,player.Q4,player.attention,player.Q5,player.Q6,player.Q7]
+        if group_id == "A":
+            player.player_survey.loc[len(player.player_survey)] = [player.id_in_group,player.age,player.gender,player.education,player.crt_bat,player.crt_widget,player.crt_lake,player.Q1,player.Q2,player.Q3,None,player.attention,None,None,player.Q8]
+        elif group_id in 'BD':
+            player.player_survey.loc[len(player.player_survey)] = [player.id_in_group,player.age,player.gender,player.education,player.crt_bat,player.crt_widget,player.crt_lake,player.Q1,player.Q2,player.Q3,player.Q4,player.attention,player.Q6,None,player.Q8]
+        else:
+            player.player_survey.loc[len(player.player_survey)] = [player.id_in_group,player.age,player.gender,player.education,player.crt_bat,player.crt_widget,player.crt_lake,player.Q1,player.Q2,player.Q3,player.Q4,player.attention,None,player.Q7,player.Q8]
         player.player_survey.to_csv(player.c.OTHER_CSV_PATH + "survey.csv", index=False)
         bonus = Bonus(id_in_group=player.id_in_group,group_id=group_id)
         bonus.manual_csv_name_check()
-        time.sleep(1) # 阻塞一秒，防止用户提交的csv没有完全写入
+        time.sleep(10) # 阻塞一秒，防止用户提交的csv没有完全写入
 
 '''展示报酬界面'''
 class RewardPage(Page):

@@ -1,10 +1,9 @@
-{{ block title }}微博情感标注{{ endblock }}
 {{ block content }}
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Human-AI Co-Learning</title>
+        <title>微博情感标注</title>
         <style>
             .first {
                 width: 50%;
@@ -126,6 +125,137 @@
 
     <div class="form">
         <header>
+            {{ if group_id == "A" }}
+            <br>
+            {{ elif group_id == "B" }}
+            <body onload="clickbutton()">
+                <div style="border-style:dashed;border-radius:25px;">
+                    <br>
+                    <div>  
+                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
+                        <div class="second" align="center" >
+                            <form>
+                                <div class="star">
+                                    <input type="radio" id="rate555" name="rating0" value="5">
+                                    <label for="rate555" title="Amazing"></label>
+                        
+                                    <input type="radio" id="rate444" name="rating0" value="4">
+                                    <label for="rate444" title="Good"></label>
+                                
+                                    <input type="radio" id="rate333" name="rating0" value="3">
+                                    <label for="rate333" title="Average"></label>
+                                
+                                    <input type="radio" id="rate222" name="rating0" value="2">
+                                    <label for="rate222" title="Not good"></label>
+                                
+                                    <input type="radio" id="rate111" name="rating0" value="1">
+                                    <label for="rate111" title="Terrible"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>  
+                </div>
+            </body> 
+            <br>
+            {{ elif group_id == "C" }}
+            <body onload="clickbutton()">
+                <div style="border-style:dashed;border-radius:25px;">
+                    <br>
+                    <div>  
+                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
+                        <div class="second" align="center" >
+                            <form>
+                                <div class="star">
+                                    <input type="radio" id="rate555" name="rating0" value="5">
+                                    <label for="rate555" title="Amazing"></label>
+                        
+                                    <input type="radio" id="rate444" name="rating0" value="4">
+                                    <label for="rate444" title="Good"></label>
+                                
+                                    <input type="radio" id="rate333" name="rating0" value="3">
+                                    <label for="rate333" title="Average"></label>
+                                
+                                    <input type="radio" id="rate222" name="rating0" value="2">
+                                    <label for="rate222" title="Not good"></label>
+                                
+                                    <input type="radio" id="rate111" name="rating0" value="1">
+                                    <label for="rate111" title="Terrible"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
+                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>  
+                </div>
+            </body>
+            <br>
+            {{ elif group_id == "D" }}
+            <body onload="clickbutton()">
+                <div style="border-style:dashed;border-radius:25px;">
+                    <br>
+                    <div>  
+                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
+                        <div class="second" align="center" >
+                            <form>
+                                <div class="star">
+                                    <input type="radio" id="rate555" name="rating0" value="5">
+                                    <label for="rate555" title="Amazing"></label>
+                        
+                                    <input type="radio" id="rate444" name="rating0" value="4">
+                                    <label for="rate444" title="Good"></label>
+                                
+                                    <input type="radio" id="rate333" name="rating0" value="3">
+                                    <label for="rate333" title="Average"></label>
+                                
+                                    <input type="radio" id="rate222" name="rating0" value="2">
+                                    <label for="rate222" title="Not good"></label>
+                                
+                                    <input type="radio" id="rate111" name="rating0" value="1">
+                                    <label for="rate111" title="Terrible"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>  
+                </div>
+            </body> 
+            <br>
+            {{ elif group_id == "E" }}
+            <body onload="clickbutton()">
+                <div style="border-style:dashed;border-radius:25px;">
+                    <br>
+                    <div>  
+                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
+                        <div class="second" align="center" >
+                            <form>
+                                <div class="star">
+                                    <input type="radio" id="rate555" name="rating0" value="5">
+                                    <label for="rate555" title="Amazing"></label>
+                        
+                                    <input type="radio" id="rate444" name="rating0" value="4">
+                                    <label for="rate444" title="Good"></label>
+                                
+                                    <input type="radio" id="rate333" name="rating0" value="3">
+                                    <label for="rate333" title="Average"></label>
+                                
+                                    <input type="radio" id="rate222" name="rating0" value="2">
+                                    <label for="rate222" title="Not good"></label>
+                                
+                                    <input type="radio" id="rate111" name="rating0" value="1">
+                                    <label for="rate111" title="Terrible"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
+                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>    
+                </div>
+            </body>
+            <br>
+            {{ endif }}
                 <br>
                 <br>
                 <h1>请根据评论内容判断该条评论所属的标签类别，你标注的结果将最终决定你的薪酬！</h1>
@@ -155,6 +285,34 @@
         </div>
         <br>
         <br>
+
+        {{ if group_id == "A" }}
+        <br>
+        {{ else }}
+        <div>
+            <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对AI的信任程度</div>
+            <div class="second" align="center" >
+                <form>
+                    <div class="star">
+                        <input type="radio" id="rate5" name="rating1" value="5">
+                        <label for="rate5" title="Amazing"></label>
+                 
+                        <input type="radio" id="rate4" name="rating1" value="4">
+                        <label for="rate4" title="Good"></label>
+                 
+                        <input type="radio" id="rate3" name="rating1" value="3">
+                        <label for="rate3" title="Average"></label>
+                 
+                        <input type="radio" id="rate2" name="rating1" value="2">
+                        <label for="rate2" title="Not good"></label>
+                 
+                        <input type="radio" id="rate1" name="rating1" value="1">
+                        <label for="rate1" title="Terrible"></label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{ endif }}
 
         <div>
             <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度</div>
@@ -228,6 +386,33 @@
         background-position: 0 -30px; 
     }
     </style>
+
+    <!-- 自动选中 -->
+<script>
+    function clickbutton(){
+        var confidence_AI = {{ AI_predict_rate }};
+        if (confidence_AI == '1') {
+            document.getElementById("rate111").checked="checked";
+        }
+        if (confidence_AI == '2') {
+            document.getElementById("rate222").checked="checked";
+        }  
+        if (confidence_AI == '3') {
+            document.getElementById("rate333").checked="checked";
+        }  
+        if (confidence_AI == '4') {
+            document.getElementById("rate444").checked="checked";
+        }  
+        if (confidence_AI == '5') {
+            document.getElementById("rate555").checked="checked";
+        }
+        document.getElementById("rate111").disabled=true;
+        document.getElementById("rate222").disabled=true;
+        document.getElementById("rate333").disabled=true; 
+        document.getElementById("rate444").disabled=true; 
+        document.getElementById("rate555").disabled=true;  
+    }
+</script>
 
     {{ formfield_errors 'sen_result' }}
 
