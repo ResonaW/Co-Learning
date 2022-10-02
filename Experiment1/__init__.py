@@ -321,7 +321,7 @@ class MyAC(Page):
     form_fields = ['sen_result']
     @staticmethod
     def vars_for_template(player):
-        r_num = player.round_number
+        r_num = 16
         r_data = player.participant.player_data.iloc[r_num-1]  # 随机抽取
         return dict(
             ID=r_num,  # 轮数
@@ -340,7 +340,7 @@ class MyAC(Page):
             player.player_ac.to_csv(player.c.OTHER_CSV_PATH + "attention_check.csv", index=False)
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 16
+        return player.round_number == 16 or player.round_number == 48
 
 '''预测32条文本情感页面'''
 class MyTest(Page):

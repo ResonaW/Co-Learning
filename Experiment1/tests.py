@@ -14,7 +14,7 @@ class PlayerBot(Bot):
         if self.round_number <= 32 and group_id != 'A':
             yield MyPage, dict(sen_result=str(random.randint(0,6)),AI_confidence="1",Human_confidence="5")
             # time.sleep(3)
-        if self.round_number == 16:
+        if self.round_number == 16 or self.round_number == 48:
             yield MyAC, dict(sen_result="1")
             # time.sleep(30)
         if self.round_number > 32:
