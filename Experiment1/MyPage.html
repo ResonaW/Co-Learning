@@ -215,7 +215,7 @@
                             </div>
                         </div>
                         <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
-                        <h1>你刚刚选择的答案为：<span1 id="predict_label">“{{ player.sen_result }}”</span1></h1>  
+                        <h1>你刚刚选择为：<span1 id="previous_choice">“{{ previous_choice }}”</span1>,你刚刚的自信程度为：<span1 id="previous_confidence">{{ previous_confidence }}</span1>颗星</h1>  
                     </div>
                 </body> 
                 <br>
@@ -249,7 +249,7 @@
                         <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
                         <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
                         <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>
-                        <h1>你刚刚选择的答案为：<span1 id="predict_label">“{{ player.sen_result }}”</span1></h1>      
+                        <h1>你刚刚选择为：<span1 id="previous_choice">“{{ previous_choice }}”</span1>,你刚刚的自信程度为：<span1 id="previous_confidence">{{ previous_confidence }}</span1>颗星</h1>      
                     </div>
                 </body>
                 <br>

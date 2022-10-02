@@ -236,31 +236,7 @@
         </div>
     </div>
 
-    {{ if group_id == "C" }}
-    <div>
-        <div class="first" align="center" >我觉得我理解了AI将微博分类的理由：</div>
-        <div class="second" align="center" >
-            <form>
-                <div class="star">
-                    <input type="radio" id="rate95" name="ask7" value="5">
-                    <label for="rate95" title="Amazing"></label>
-             
-                    <input type="radio" id="rate94" name="ask7" value="4">
-                    <label for="rate94" title="Good"></label>
-             
-                    <input type="radio" id="rate93" name="ask7" value="3">
-                    <label for="rate93" title="Average"></label>
-             
-                    <input type="radio" id="rate92" name="ask7" value="2">
-                    <label for="rate92" title="Not good"></label>
-             
-                    <input type="radio" id="rate91" name="ask7" value="1">
-                    <label for="rate91" title="Terrible"></label>
-                </div>
-            </form>
-        </div>
-    </div>
-    {{ elif group_id == "E" }}
+    {{ if group_id in "CE" }}
     <div>
         <div class="first" align="center" >我觉得我理解了AI将微博分类的理由：</div>
         <div class="second" align="center" >
@@ -333,7 +309,6 @@
     {{ endif }}
     {{ formfield_errors 'Q8' }}
     {{ formfield_errors 'attention' }}
-
     
     <button class="otree-btn-next btn btn-primary"  onclick="uploaddata()" align="center">提交问卷</button>
 
