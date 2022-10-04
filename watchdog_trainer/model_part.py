@@ -56,6 +56,7 @@ class FileEventHandler(FileSystemEventHandler):
                 time.sleep(3)
                 train_df = pd.read_csv(event.src_path)
                 train_dataset = My_Dataset(train_df, self.tokenizer)
+                self.model = import_model()
                 trainer = build_trainer(model=self.model, train_dataset=train_dataset, test_dataset=self.test_dataset)
                 trainer.train()
                 # 模型预测

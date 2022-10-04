@@ -3,6 +3,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+  <!-- Headers -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -105,29 +106,28 @@
     }
   </style>
 
-    <title>实验介绍</title>
   </head>
   <body>
+    <!-- Title -->
     <h2 align="center" style="top:20%;">微博情感标注</h2>
     <main class="container">
       <div class="tab-container">
+        <!-- Tab栏 -->
         <div class="tabs">
           <div id="tab1" class="tab active">简介</div>
           <div id="tab3" class="tab">薪酬</div>
           <div id="tab4" class="tab">提示</div>
         </div>
         <div class="tab-content">
+          <!-- 简介 -->
           <div data-tab="tab1" style="display: block">            
             <h5 style="line-height:250%;">  在过去的十年中，人类对于AI（人工智能）的需求急剧增加， AI 也被广泛使用于协助情感分析等现实场景。</h5>
             {{ if id == "D" }}
             <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注完一条微博后，我们将向你<b>展示AI的判断以及AI对于其判断的自信程度</b>，你可以结合AI的判断重新标注情感（你可以维持原来的判断或者根据AI的判断对标注结果进行修改）。</h5>
-            <!-- <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div> -->
             {{ elif id == "B" }}
             <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI的判断以及AI对于其判断的自信程度</b>，你可以结合AI判断做出标注。</h5>
-            <!-- <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div> -->
             {{ elif id == "A" }}
             <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。</h5>
-            <!-- <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div> -->
             {{ elif id == "C" }}
             <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI的判断、AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI判断做出标注。以下为AI对其判断解释的一个样例。</h5>
             <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div>
@@ -140,6 +140,7 @@
             <button type="button" class="btn btn-primary" id="button01-next">下一页</button>
             </div> 
           </div>
+          <!-- 薪酬 -->
           <div data-tab="tab3" style="display: none">
             <h5 style="line-height:250%;">整个实验包含<b>两个阶段</b>:<br>第一阶段为标注训练阶段，你将对32条微博文本做标注，<b>请充分利用第一阶段熟悉标注内容</b>。当你完成第一阶段后，你将获得5元的基础薪酬。</h5>
             {{ if id == "A" }}
@@ -153,6 +154,7 @@
               <button type="button" class="btn btn-primary" id="button02-next">下一页</button> 
             </div>
           </div>
+          <!-- 提示 -->
           <div data-tab="tab4" style="display: none">
             <h5 style="line-height:250%;">1、实验预计花费20分钟，请预留足够时间且尽量避免在标注完成前退出系统。</h5>
             <h5 style="line-height:250%;">2、你所获得的报酬仅与标注准确率有关，请尽量<b>提高准确率</b>而不是速度。</h3>
@@ -164,7 +166,6 @@
         </div>
       </div>
     </main>
-    <!-- <script src="index.js"></script> -->
     <script>
         const tabContainer = document.querySelector(".tabs");
         const tabs = document.querySelectorAll(".tab");
@@ -207,6 +208,4 @@
 </html>
 <br>
 <div align="center">点击上方导航栏以切换标签页</div>
-
-
 {{ endblock }}

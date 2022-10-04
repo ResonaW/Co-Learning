@@ -87,7 +87,7 @@
         </style>
     </head>
     <script>
-        var x = {{ ID }}
+        var x = {{ ID }} - 32
         function round_left(){
             var y = 32 - x ;
             document.getElementById("round").innerHTML="本次标注任务剩余任务数量为："+y;
@@ -95,7 +95,6 @@
         function uploaddata(){
             var answer = $("input[name='place1']:checked").val();
             var human_confi = $("input[name='rating2']:checked").val();
-            if (answer==null || human_confi==null){alert("您有尚未完成的问题")}
             document.getElementById("sen_result").value=answer;
             document.getElementById("Human_confidence").value=human_confi;
         }
@@ -115,17 +114,14 @@
 <b style="font-size: 20px;">微博内容:</b>
 <div class="card bg-light m-3">
     <div class="card-body">
-    <br>
-    <p id="content_comment">{{ content_weibo }}</p>
+        <br>
+    <p>{{ content_weibo }}</p>
     </div>
 </div>
     <div class="form">
-        <header>  
-                <br>
-                <br>
-            <h1>请根据所给微博内容判断该条微博所属的标签类别？</h1>
+        <header>
+            <h1>请根据微博内容判断该条微博所属的标签类别，你标注的结果将最终决定你的薪酬！</h1>
         </header>
-        
         <div class="row" align="center">
             <div class="column">
                 <input type="radio" name="place1" value="4" /><span2 style="font-size: 20px color= #000">  愤怒</span>
@@ -151,8 +147,6 @@
         </div>
         <br>
         <br>
-
-
         <div>
             <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度</div>
             <div class="second" align="center" >
@@ -180,11 +174,7 @@
 
         <br>
         <br>
-        {{ if id == "A" }}
         <button class="button-submit" onclick="uploaddata()">提交</button>
-        {{ else }}
-        <button class="button-submit" onclick="uploaddata()">查看AI结果</button>
-        {{ endif }}
 
     <input type="hidden" name="sen_result" id="sen_result" />
     <input type="hidden" name="Human_confidence" id="Human_confidence" />
@@ -233,7 +223,7 @@
 
     {{ formfield_errors 'sen_result' }}
     {{ formfield_errors 'Human_confidence' }}
-
+    
 {{ endblock }}
 
 

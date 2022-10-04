@@ -288,30 +288,24 @@
     {{ formfield 'phone' }}
 
     <script>
+        var id = {{ group_id }}
         function uploaddata(){
-            var names=["ask1","ask2","ask3","ask4","attention","ask6","ask7","ask8"];
-            var ids = ["Q1","Q2","Q3","Q4","attention","Q6","Q7","Q8"]
-            for (i=0;i<names.length;i++){
-                var que = $("input[name='"+names[i]+"']:checked").val();
-                console.log(que)
-                if ((i<3 || i==4 || i==7) && que == null){
-                    alert("您有尚未完成的问题")
-                    break
-                }
-                if (i==3 && que == null && (({{ player_id }} - 1) % 5 != 0)){
-                    alert("您有尚未完成的问题")
-                    break
-                }
-                if (i==5 && que == null && ((({{ player_id }} - 2) % 5 == 0) || (({{ player_id }} - 4) % 5 == 0))){
-                    alert("您有尚未完成的问题")
-                    break
-                }
-                if (i==6 && que == null && ((({{ player_id }} - 3) % 5 == 0) || (({{ player_id }} - 5) % 5 == 0))){
-                    alert("您有尚未完成的问题")
-                    break
-                }
-                document.getElementById(ids[i]).value=que;
-            }
+            var question1 = $("input[name='ask1']:checked").val();
+            var question2 = $("input[name='ask2']:checked").val();
+            var question3 = $("input[name='ask3']:checked").val();
+            var question4 = $("input[name='ask4']:checked").val();
+            var question6 = $("input[name='ask6']:checked").val();
+            var question7 = $("input[name='ask7']:checked").val();
+            var question8 = $("input[name='ask8']:checked").val();
+            var attention = $("input[name='attention']:checked").val();
+            document.getElementById("Q1").value=question1;
+            document.getElementById("Q2").value=question2;
+            document.getElementById("Q3").value=question3;
+            document.getElementById("Q4").value=question4;
+            document.getElementById("Q6").value=question6;
+            document.getElementById("Q7").value=question7;
+            document.getElementById("Q8").value=question8;
+            document.getElementById("attention").value=attention;
         }
     </script>
 

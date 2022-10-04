@@ -1,3 +1,4 @@
+{{ block title }}<p style="color:white">微博情感标注</p>{{ endblock }}
 {{ block content }}
 <!DOCTYPE html>
 <html>
@@ -95,6 +96,7 @@
             var answer = $("input[name='place1']:checked").val();
             var AI_confi = $("input[name='rating1']:checked").val();
             var human_confi = $("input[name='rating2']:checked").val();
+            if (answer==null || AI_confi==null || human_confi==null){alert("您有尚未完成的问题")}
             document.getElementById("sen_result").value=answer;
             document.getElementById("AI_confidence").value=AI_confi;
             document.getElementById("Human_confidence").value=human_confi;
@@ -158,7 +160,7 @@
                 <body onload="clickbutton()">
                     <div style="border-style:dashed;border-radius:25px;">
                         <br>
-                        <div>  
+                        <!-- <div>  
                             <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
                             <div class="second" align="center" >
                                 <form>
@@ -181,7 +183,7 @@
                                 </form>
                             </div>
                         </div>
-                        <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
+                        <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1> -->
                         <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
                         <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>  
                     </div>
@@ -223,7 +225,7 @@
                 <body onload="clickbutton()">
                     <div style="border-style:dashed;border-radius:25px;">
                         <br>
-                        <div>  
+                        <!-- <div>  
                             <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
                             <div class="second" align="center" >
                                 <form>
@@ -246,7 +248,7 @@
                                 </form>
                             </div>
                         </div>
-                        <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
+                        <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1> -->
                         <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
                         <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>
                         <h1>你刚刚选择为：<span1 id="previous_choice">“{{ previous_choice }}”</span1>,你刚刚的自信程度为：<span1 id="previous_confidence">{{ previous_confidence }}</span1>颗星</h1>      
