@@ -103,7 +103,7 @@ emotion_dict = { 1:'快乐', 0:'喜爱', 4:'愤怒', 2:'悲伤', 3:'厌恶', 5:'
 class C(BaseConstants):
     NAME_IN_URL = 'exp2'
     # 待修改 后续应该是800人
-    PLAYERS_PER_GROUP = 8
+    PLAYERS_PER_GROUP = 12
     NUM_ROUNDS = 64
     # 训练和验证集csv存放位置
     PRELABEL_CSV_PATH  = './watchdog_trainer/Experiment2_csv/prelabel_csv/'
@@ -131,7 +131,9 @@ class Player(BasePlayer):
     sen_result = models.IntegerField()  # 用户情感判断结果
     AI_confidence = models.IntegerField() # AI置信度
     Human_confidence = models.IntegerField() # 人类置信度
-    # SurveyPage问题
+    AI_demand_flag = models.BooleanField() # 用户是否要显示AI
+    data_demand_flag = models.BooleanField() # 用户是否要额外数据
+    # ----------SurveyPage问题----------
     age = models.IntegerField(
         label='您的年龄段是?',
         choices=[['1', '18岁以下'], ['2', '18-25岁'], ['3', '26-30岁'], ['4', '31-35岁'], ['5', '35岁以上']],
@@ -271,10 +273,11 @@ class PrePage(Page):
             player.participant.player_prelabel = None # 释放内存
 
 # 10-4: 需加入功能，On-demand AI EXP 以及On-demand Additional Data，放在一页里或者多添加两页，然后在Player里或者Participant里设置两个变量
+# 10-6: 已实现页面内倒计时 接下来实现页面内更换数据
 '''预测32条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
-    form_fields = ['sen_result','AI_confidence','Human_confidence']
+    form_fields = ['sen_result','AI_confidence','Human_confidence','AI_demand_flag','data_demand_flag']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
@@ -288,10 +291,15 @@ class MyPage(Page):
             group_id = get_group_id(player.id_in_group),
             content_weibo=r_data['text'],
             predict_weibo_sen = r_data['pred_str'], # 预测类
+            image_path='lime_imgs/lime_exp{}.png'.format(r_data['id']), # 可解释性导入
             AI_predict_rate = str(r_data['main_emotion_confidence(1-5)_AI']), # AI置信度
             icon_path='starIcon.png',
             previous_choice = previous_choice,
             previous_confidence = previous_confidence,
+            substitute_content = "这是一段替换文本",
+            substitute_predict = "替换预测类别",
+            substitute_confidence = "5",
+            substitute_img = 'lime_imgs/lime_exp{}.png'.format(r_data['id']) # 这里要改的
             )
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -314,11 +322,6 @@ class MyPage(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number <= 32
-
-# 10-4: 单独的AI EXP界面 记得把标志复位
-'''展示AI Explanation的界面'''
-class ExplanationPage(Page):
-    pass
 
 # 10-4: Additional Data界面 应该和 Mypage是一样的 只是这个页面是否需要AI EXP呢？ 记得把标志复位
 '''Additional Data的界面'''
@@ -351,7 +354,7 @@ class MyAC(Page):
             player.player_ac.to_csv(player.c.OTHER_CSV_PATH + "attention_check.csv", index=False)
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 16 or player.round_number == 48
+        return player.round_number == 16 or player.round_number == 48 
 
 '''预测32条文本情感页面'''
 class MyTest(Page):

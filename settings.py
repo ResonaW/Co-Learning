@@ -15,6 +15,13 @@ dict(
         num_demo_participants=8,
         # use_browser_bots=True # 自动填写fields
     ),
+dict(
+        name='Experiment2', # 实验1
+        display_name="Experiment2",
+        app_sequence=['Experiment2'],
+        num_demo_participants=12,
+        # use_browser_bots=True # 自动填写fields
+    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
