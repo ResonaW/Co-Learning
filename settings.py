@@ -54,4 +54,4 @@ DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = '5908604368973'
 INSTALLED_APPS = ['otree']
-DEBUG=False #关闭debug模式
+# DEBUG=False #关闭debug模式
