@@ -179,6 +179,7 @@
 
     <input type="hidden" name="sen_result" id="sen_result" />
     <input type="hidden" name="Human_confidence" id="Human_confidence" />
+    <input type="hidden" name="pagetime" id="pagetime" />
 
 </div>
 </div>
@@ -222,8 +223,28 @@
     }
     </style>
 
+    <!-- 计时功能 -->
+<script>
+    const start = new Date();
+    function timer(start) {
+    var now = new Date();
+    var det = now - start;
+    console.log(det);
+    now.setTime(det);
+    now.setHours(0);
+    var seconds = now.getSeconds();
+    var min = now.getMinutes();
+    var time = min * 60 + seconds ; 
+    // document.getElementById("id_name").innerHTML = now.toLocaleTimeString();
+    // document.getElementById("id_name_1").innerHTML = time;
+    document.getElementById("pagetime").value=time;
+    }
+    setInterval(function(){timer(start)}, 1000);
+</script>
+
     {{ formfield_errors 'sen_result' }}
     {{ formfield_errors 'Human_confidence' }}
+    {{ formfield_errors 'pagetime' }}
     
 {{ endblock }}
 

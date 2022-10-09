@@ -74,11 +74,11 @@ def init_player_data(player,id_in_group):
     player.participant.player_data['trail'] = list('12345678'*8)
     player.participant.player_data.sort_values(by=['trail'],inplace=True)
     # 存放用户在prepage中的第一次提交(before relabel)
-    player.participant.player_prelabel = pd.DataFrame(columns=["text_id","round", "text", "label", "id", "group", "Human_confidence"])
+    player.participant.player_prelabel = pd.DataFrame(columns=["text_id","round", "text", "label", "id", "group", "Human_confidence","pagetime"])
     # 存放用户的提交的前32条训练数据
-    player.participant.player_train = pd.DataFrame(columns=["text_id","round", "text", "label", "id", "group", "AI_confidence", "Human_confidence"])
+    player.participant.player_train = pd.DataFrame(columns=["text_id","round", "text", "label", "id", "group", "AI_confidence", "Human_confidence","pagetime"])
     # 存放用户的提交的后32条测试数据
-    player.participant.player_test = pd.DataFrame(columns=["text_id","round", "text", "label", "id", "group", "Human_confidence"])
+    player.participant.player_test = pd.DataFrame(columns=["text_id","round", "text", "label", "id", "group", "Human_confidence","pagetime"])
 
 emotion_dict = { 1:'快乐', 0:'喜爱', 4:'愤怒', 2:'悲伤', 3:'厌恶', 5:'惊讶', 6:'恐惧'}
 
@@ -113,6 +113,7 @@ class Player(BasePlayer):
     sen_result = models.IntegerField()  # 用户情感判断结果
     AI_confidence = models.IntegerField() # AI置信度
     Human_confidence = models.IntegerField() # 人类置信度
+    pagetime = models.IntegerField()  # mypage页面停留时间
     # SurveyPage问题
     age = models.IntegerField(
         label='您的年龄段是?',
@@ -164,9 +165,14 @@ class Player(BasePlayer):
         choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
         widget=widgets.RadioSelect
     )
+    Q13 = models.IntegerField(
+        label='在本次实验前，我对利用AI进行情感分析有所了解',
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
+    )
     # BCDE
     Q4 = models.IntegerField(
-        label='我相信AI能够根据评论内容做出正确的分类：',
+        label='我相信AI能够根据微博内容做出正确的分类：',
         choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
         widget=widgets.RadioSelect
     )
@@ -177,6 +183,26 @@ class Player(BasePlayer):
     )
     Q5 = models.IntegerField(
         label='我相信我的标注显着提高了 AI 在文本分类方面的准确性：',
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
+    )
+    Q9 = models.IntegerField(
+        label='我觉得AI很好的执行了情感标注的任务。',
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
+    )
+    Q10 = models.IntegerField(
+        label='当我依靠AI的判断时，我会得到正确的答案。',
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
+    )
+    Q11 = models.IntegerField(
+        label='我会思考AI没有选择其他分类的原因。',
+        choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
+        widget=widgets.RadioSelect
+    )
+    Q12 = models.IntegerField(
+        label='我会去分析AI和我做出的判断的异同。',
         choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
         widget=widgets.RadioSelect
     )
@@ -220,7 +246,7 @@ class Introduction(Page):
 '''首次标注界面（不展示AI）'''
 class PrePage(Page):
     form_model = 'player'
-    form_fields = ['sen_result','Human_confidence']
+    form_fields = ['sen_result','Human_confidence','pagetime']
     @staticmethod
     def vars_for_template(player): # 此处做了精简
         r_num = player.round_number
@@ -249,7 +275,8 @@ class PrePage(Page):
                 player.id_in_group,
                 get_group_id(player.id_in_group),
                 None,
-                player.Human_confidence
+                player.Human_confidence,
+                player.pagetime
             ]
             if r_num == 32: # 保存用户的数据
                 player.participant.player_train.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
@@ -262,7 +289,8 @@ class PrePage(Page):
                 player.sen_result,
                 player.id_in_group,
                 get_group_id(player.id_in_group),
-                player.Human_confidence
+                player.Human_confidence,
+                player.pagetime
             ]
             if r_num == 32: # 保存用户的数据
                 player.participant.player_prelabel.to_csv(player.c.PRELABEL_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
@@ -271,7 +299,7 @@ class PrePage(Page):
 '''预测32条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
-    form_fields = ['sen_result','AI_confidence','Human_confidence']
+    form_fields = ['sen_result','AI_confidence','Human_confidence','pagetime']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
@@ -305,7 +333,8 @@ class MyPage(Page):
             player.id_in_group,
             get_group_id(player.id_in_group),
             player.AI_confidence,
-            player.Human_confidence
+            player.Human_confidence,
+            player.pagetime
         ]
         if r_num == 32: # 保存用户的数据
             player.participant.player_train.to_csv(player.c.TRAIN_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
@@ -345,7 +374,7 @@ class MyAC(Page):
 '''预测32条文本情感页面'''
 class MyTest(Page):
     form_model = 'player'
-    form_fields = ['sen_result','Human_confidence']
+    form_fields = ['sen_result','Human_confidence','pagetime']
     @staticmethod
     def vars_for_template(player):
         r_num = player.round_number
@@ -367,7 +396,8 @@ class MyTest(Page):
             player.sen_result,
             player.id_in_group,
             get_group_id(player.id_in_group),
-            player.Human_confidence
+            player.Human_confidence,
+            player.pagetime
         ]
         if r_num == 64:
             player.participant.player_test.to_csv(player.c.TEST_CSV_PATH + "%d_%s.csv" % (player.id_in_group, get_group_id(player.id_in_group)),index=False)
@@ -390,11 +420,11 @@ class ExitSurveyPage(Page):
     def get_form_fields(player):
         group_id = get_group_id(player.id_in_group)
         if group_id in "A": # without AI, 不展示问题467
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','attention','Q8','phone']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','attention','Q8','phone']
         elif group_id in "BD": # without AI explanation, 不展示问题7
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention','Q6','Q8','phone']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','Q4','Q9','Q10','Q11','Q12','attention','Q6','Q8','phone']
         else: # with AI explanation,不展示问题6
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q4','attention',"Q7",'Q8','phone']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','Q4','Q9','Q10','Q11','Q12','attention',"Q7",'Q8','phone']
     @staticmethod
     def vars_for_template(player):
         return dict( num=player.round_number,
