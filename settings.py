@@ -12,16 +12,16 @@ dict(
         name='Experiment1', # 实验1
         display_name="Experiment1",
         app_sequence=['Experiment1'],
-        num_demo_participants=8,
+        num_demo_participants=800,
         # use_browser_bots=True # 自动填写fields
     ),
-dict(
-        name='Experiment2', # 实验1
-        display_name="Experiment2",
-        app_sequence=['Experiment2'],
-        num_demo_participants=12,
-        # use_browser_bots=True # 自动填写fields
-    ),
+# dict(
+#         name='Experiment2', # 实验1
+#         display_name="Experiment2",
+#         app_sequence=['Experiment2'],
+#         num_demo_participants=12,
+#         # use_browser_bots=True # 自动填写fields
+#     ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
@@ -54,4 +54,4 @@ DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = '5908604368973'
 INSTALLED_APPS = ['otree']
-# DEBUG=False #关闭debug模式
+DEBUG=False #关闭debug模式

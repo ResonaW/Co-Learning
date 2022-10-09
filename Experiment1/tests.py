@@ -10,15 +10,15 @@ class PlayerBot(Bot):
             yield Introduction
             # time.sleep(10)
         if self.round_number <= 32 and ( group_id == 'D' or group_id == 'E' or group_id == 'A'):
-            yield PrePage, dict(sen_result=str(random.randint(0,6)), Human_confidence="5")
+            yield PrePage, dict(sen_result=str(random.randint(0,6)), Human_confidence="5",pagetime=10)
         if self.round_number <= 32 and group_id != 'A':
-            yield MyPage, dict(sen_result=str(random.randint(0,6)),AI_confidence="1",Human_confidence="5")
+            yield MyPage, dict(sen_result=str(random.randint(0,6)),AI_confidence="1",Human_confidence="5",pagetime=10)
             # time.sleep(3)
         if self.round_number == 16 or self.round_number == 48:
             yield MyAC, dict(sen_result="1")
-            # time.sleep(3)
+            time.sleep(5)
         if self.round_number > 32:
-            yield MyTest, dict(sen_result=str(random.randint(0,6)), Human_confidence="5")
+            yield MyTest, dict(sen_result=str(random.randint(0,6)), Human_confidence="5",pagetime=10)
         if self.round_number == 32:
             yield ResultWaitPage
             # time.sleep(30)

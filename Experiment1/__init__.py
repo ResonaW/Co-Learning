@@ -86,7 +86,7 @@ emotion_dict = { 1:'快乐', 0:'喜爱', 4:'愤怒', 2:'悲伤', 3:'厌恶', 5:'
 class C(BaseConstants):
     NAME_IN_URL = 'Experiment1'
     # 待修改 后续应该是800人
-    PLAYERS_PER_GROUP = 8
+    PLAYERS_PER_GROUP = 800
     NUM_ROUNDS = 64
     # 训练和验证集csv存放位置
     PRELABEL_CSV_PATH  = './watchdog_trainer/prelabel_csv/'
@@ -350,7 +350,7 @@ class MyAC(Page):
     form_fields = ['sen_result']
     @staticmethod
     def vars_for_template(player):
-        r_num = 16
+        r_num = player.round_number
         r_data = player.participant.player_data.iloc[r_num-1]  # 随机抽取
         return dict(
             ID=r_num,  # 轮数
@@ -364,7 +364,7 @@ class MyAC(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         r_num = player.round_number
-        if r_num == 16: # 保存数据
+        if r_num == 16 or r_num==48: # 保存数据
             player.player_ac.loc[len(player.player_ac)] = [r_num,player.sen_result,player.id_in_group,get_group_id(player.id_in_group)]
             player.player_ac.to_csv(player.c.OTHER_CSV_PATH + "attention_check.csv", index=False)
     @staticmethod

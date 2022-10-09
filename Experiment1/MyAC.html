@@ -113,7 +113,7 @@
 
 <h5 id="round" align="center">当前标注任务的位置是：
     <span>
-        {{ ID }}/32
+        16/32
     </span>
 </h5>
 
@@ -127,9 +127,8 @@
 
     <div class="form">
         <header>
-            {{ if group_id == "A" }}
-            <br>
-            {{ elif group_id == "B" }}
+            {{ if group_id == "A" or ID != 16 }}
+            {{ elif group_id == "B" or ID == 16 }}
             <body onload="clickbutton()">
                 <div style="border-style:dashed;border-radius:25px;">
                     <br>
@@ -160,7 +159,7 @@
                 </div>
             </body> 
             <br>
-            {{ elif group_id == "C" }}
+            {{ elif group_id == "C" or ID == 16 }}
             <body onload="clickbutton()">
                 <div style="border-style:dashed;border-radius:25px;">
                     <br>
@@ -193,7 +192,7 @@
                 </div>
             </body>
             <br>
-            {{ elif group_id == "D" }}
+            {{ elif group_id == "D" or ID == 16 }}
             <body onload="clickbutton()">
                 <div style="border-style:dashed;border-radius:25px;">
                     <br>
@@ -224,7 +223,7 @@
                 </div>
             </body> 
             <br>
-            {{ elif group_id == "E" }}
+            {{ elif group_id == "E" or ID == 16 }}
             <body onload="clickbutton()">
                 <div style="border-style:dashed;border-radius:25px;">
                     <br>
@@ -288,7 +287,7 @@
         <br>
         <br>
 
-        {{ if group_id == "A" }}
+        {{ if group_id == "A" or ID != 16 }}
         <br>
         {{ else }}
         <div>

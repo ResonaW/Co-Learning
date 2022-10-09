@@ -274,6 +274,7 @@ class PrePage(Page):
 
 # 10-4: 需加入功能，On-demand AI EXP 以及On-demand Additional Data，放在一页里或者多添加两页，然后在Player里或者Participant里设置两个变量
 # 10-6: 已实现页面内倒计时 接下来实现页面内更换数据
+# 10-7: 实现了功能 需要数据
 '''预测32条文本情感页面'''
 class MyPage(Page):
     form_model = 'player'
