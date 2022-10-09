@@ -16,16 +16,20 @@ doc = """Experiment1"""
 '''
 def get_group_id(id_in_group):
     # id从1开始
-    if (id_in_group - 1) % 5 == 0:
+    if (id_in_group - 1) % 7 == 0:
         sort = 'A'
-    elif (id_in_group - 2) % 5 == 0:
+    elif (id_in_group - 2) % 7 == 0:
         sort = 'B'
-    elif (id_in_group - 3) % 5 == 0:
+    elif (id_in_group - 3) % 7 == 0:
         sort = 'C'
-    elif (id_in_group - 4) % 5 == 0:
+    elif (id_in_group - 4) % 7 == 0:
         sort = 'D'
-    elif (id_in_group - 5) % 5 == 0:
+    elif (id_in_group - 5) % 7 == 0:
         sort = 'E'
+    elif (id_in_group - 6) % 7 == 0:
+        sort = 'F'
+    elif (id_in_group - 7) % 7 == 0:
+        sort = 'G'
     else:
         return None
     return sort
@@ -259,8 +263,8 @@ class PrePage(Page):
             )
     @staticmethod
     def is_displayed(player):
-        group_id = get_group_id(player.id_in_group) # 不展示AI，A组直接标注数据，DE组进行第一次Label(Prelabel)
-        return player.round_number <= 32 and ( group_id == 'D' or group_id == 'E' or group_id == 'A')
+        group_id = get_group_id(player.id_in_group) # 不展示AI，A组直接标注数据，DEG组进行第一次Label(Prelabel)
+        return player.round_number <= 32 and ( group_id == 'D' or group_id == 'E' or group_id == 'A' or group_id == 'G')
     @staticmethod
     def before_next_page(player, timeout_happened):
         r_num = player.round_number
@@ -304,7 +308,7 @@ class MyPage(Page):
     def vars_for_template(player):
         r_num = player.round_number
         r_data = player.participant.player_data.iloc[r_num-1] # 随机抽取
-        if get_group_id(player.id_in_group) in "DE":
+        if get_group_id(player.id_in_group) in "DEG":
             previous_choice,previous_confidence = emotion_dict[player.sen_result],player.Human_confidence
         else:
             previous_choice,previous_confidence = None,None

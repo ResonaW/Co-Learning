@@ -256,6 +256,70 @@
                 </div>
             </body>
             <br>
+            {{ elif group_id == "F" or ID == 16 }}
+            <body onload="clickbutton()">
+                <div style="border-style:dashed;border-radius:25px;">
+                    <br>
+                    <div>  
+                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
+                        <div class="second" align="center" >
+                            <form>
+                                <div class="star">
+                                    <input type="radio" id="rate555" name="rating0" value="5">
+                                    <label for="rate555" title="Amazing"></label>
+                        
+                                    <input type="radio" id="rate444" name="rating0" value="4">
+                                    <label for="rate444" title="Good"></label>
+                                
+                                    <input type="radio" id="rate333" name="rating0" value="3">
+                                    <label for="rate333" title="Average"></label>
+                                
+                                    <input type="radio" id="rate222" name="rating0" value="2">
+                                    <label for="rate222" title="Not good"></label>
+                                
+                                    <input type="radio" id="rate111" name="rating0" value="1">
+                                    <label for="rate111" title="Terrible"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>  
+                </div>
+            </body> 
+            <br>
+            {{ elif group_id == "G" or ID == 16 }}
+            <body onload="clickbutton()">
+                <div style="border-style:dashed;border-radius:25px;">
+                    <br>
+                    <div>  
+                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
+                        <div class="second" align="center" >
+                            <form>
+                                <div class="star">
+                                    <input type="radio" id="rate555" name="rating0" value="5">
+                                    <label for="rate555" title="Amazing"></label>
+                        
+                                    <input type="radio" id="rate444" name="rating0" value="4">
+                                    <label for="rate444" title="Good"></label>
+                                
+                                    <input type="radio" id="rate333" name="rating0" value="3">
+                                    <label for="rate333" title="Average"></label>
+                                
+                                    <input type="radio" id="rate222" name="rating0" value="2">
+                                    <label for="rate222" title="Not good"></label>
+                                
+                                    <input type="radio" id="rate111" name="rating0" value="1">
+                                    <label for="rate111" title="Terrible"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
+                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>    
+                </div>
+            </body>
+            <br>
             {{ endif }}
                 <br>
                 <br>
