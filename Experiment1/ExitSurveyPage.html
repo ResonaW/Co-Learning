@@ -203,7 +203,7 @@
     </div>
         <!-- 填补的内容-信任 -->
         <div>
-            <div class="first" align="center" >我觉得ai的判断是值得信赖的？</div>
+            <div class="first" align="center" >我觉得AI的判断是值得信赖的：</div>
             <div class="third" align="center" >非常反对</div>
             <div class="third" align="center" >
                 <form>
@@ -390,7 +390,7 @@
     </div>
 
 
-    {{ if group_id in "CE" }}
+    {{ if group_id in "CEFG" }}
     <div>
         <div class="first" align="center" >我觉得我理解了AI将微博分类的理由：</div>
         <div class="third" align="center" >非常反对</div>
@@ -479,6 +479,10 @@
     {{ if group_id == "C" }}
         {{ formfield_errors 'Q7' }}
     {{ elif group_id == "E" }}
+        {{ formfield_errors 'Q7' }}
+    {{ elif group_id == "F" }}
+        {{ formfield_errors 'Q7' }}
+    {{ elif group_id == "G" }}
         {{ formfield_errors 'Q7' }}
     {{ endif }}
     {{ formfield_errors 'Q8' }}
