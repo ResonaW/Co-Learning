@@ -36,6 +36,7 @@ def get_group_id(id_in_group):
         return None
     return sort
 
+
 class Bonus():
     '''计算受访者报酬：报酬=5(基础)+1*标对-0.5*标错'''
     def __init__(self, id_in_group, group_id) -> None:
@@ -111,6 +112,8 @@ class Player(BasePlayer):
     c=C()
     # 训练集dataframe
     df = pd.read_excel("./Experiment1/dataset.xlsx")
+    # 用户的支付宝账号
+    player_alipay = pd.DataFrame(columns=["alipay", "id", "group"])
     # 用户Attention Check结果dataframe
     player_ac = pd.DataFrame(columns=["round", "result", "id", "group"])
     # 用户Survey结果dataframe
@@ -172,7 +175,7 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect
     )
     Q13 = models.IntegerField(
-        label='在本次实验前，我对利用AI进行情感分析有所了解',
+        label='如果可以更换薪酬计算方式，按照AI的判断结果计算薪酬，我会选择更换（现在按照你的判断结果计算薪酬）：',
         choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
         widget=widgets.RadioSelect
     )
@@ -229,12 +232,13 @@ class Player(BasePlayer):
         choices=[['1', '非常反对'], ['2', '反对'], ['3', '一般'], ['4', '赞同'], ['5', '非常赞同']],
         widget=widgets.RadioSelect
     )
-    phone = models.StringField(label="请您提供手机号后4位，以便我们后续为您发放薪酬")
+    phone = models.StringField(label="请提供你的支付宝账号，我们后续将会通过支付宝向你发放实验薪酬：")
 
 # PAGES
 '''介绍界面'''
 class Introduction(Page):
     form_model = 'player'
+    form_fields = ['phone']
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
@@ -247,7 +251,16 @@ class Introduction(Page):
                     )
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        # 是否填写过？
+        player.player_alipay.loc[len(player.player_alipay)] = [ player.phone, player.id_in_group, get_group_id(player.id_in_group)]
+        player.player_alipay.to_csv(player.c.OTHER_CSV_PATH + "player_alipay.csv", index=False)
         init_player_data(player, player.id_in_group)
+    @staticmethod
+    def error_message(player, values):
+        player_info = pd.read_csv(player.c.OTHER_CSV_PATH + "player_alipay.csv")
+        player_info = player_info.astype({'alipay': 'str'})
+        if values['phone'] in player_info['alipay'].values:
+            return '你已经参与过本实验，请勿重复参加！'
 
 '''首次标注界面（不展示AI）'''
 class PrePage(Page):
@@ -426,11 +439,11 @@ class ExitSurveyPage(Page):
     def get_form_fields(player):
         group_id = get_group_id(player.id_in_group)
         if group_id in "A": # without AI, 不展示问题467
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','attention','Q8','phone']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','attention','Q8']
         elif group_id in "BD": # without AI explanation, 不展示问题7
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','Q4','Q9','Q10','Q11','Q12','attention','Q6','Q8','phone']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','Q4','Q9','Q10','Q11','Q12','attention','Q6','Q8']
         else: # with AI explanation,不展示问题6
-            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','Q4','Q9','Q10','Q11','Q12','attention',"Q7",'Q8','phone']
+            return ['age','gender','education','crt_bat','crt_widget','crt_lake','Q1','Q2','Q3','Q13','Q4','Q9','Q10','Q11','Q12','attention',"Q7",'Q8']
     @staticmethod
     def vars_for_template(player):
         return dict( num=player.round_number,
