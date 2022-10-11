@@ -13,6 +13,8 @@ doc = """Experiment1"""
     3C:AI+EXP
     4D:AI+Relabel
     5E:AI+Relabel+EXP
+    6F:EXP
+    7G:EXP+Relabel
 '''
 def get_group_id(id_in_group):
     # id从1开始
@@ -90,11 +92,11 @@ emotion_dict = { 1:'快乐', 0:'喜爱', 4:'愤怒', 2:'悲伤', 3:'厌恶', 5:'
 class C(BaseConstants):
     NAME_IN_URL = 'Experiment1'
     # 待修改 后续应该是800人
-    PLAYERS_PER_GROUP = 800
+    PLAYERS_PER_GROUP = 320
     NUM_ROUNDS = 64
     # 训练和验证集csv存放位置
     PRELABEL_CSV_PATH  = './watchdog_trainer/prelabel_csv/'
-    TRAIN_CSV_PATH = './watchdog_trainer/train_csv/' 
+    TRAIN_CSV_PATH = './watchdog    _trainer/train_csv/' 
     TEST_CSV_PATH = './watchdog_trainer/test_csv/' 
     OTHER_CSV_PATH = './watchdog_trainer/other_csv/'
 

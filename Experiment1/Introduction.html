@@ -3,28 +3,28 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      .otree-btn-next {
-        display: block;
-        margin:0 auto
-      }
-  </style>
-    <style>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    .otree-btn-next {
+      display: block;
+      margin: 0 auto
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: Helvetica, "PingFang SC", "Microsoft Yahei", sans-serif;
     }
-    
+
     body {
       background: #f0f0f3;
       color: #808b9f;
     }
-    
+
     .container {
       /* display: flex; */
       align-items: center;
@@ -34,12 +34,13 @@
       min-width: 375px;
       overflow: auto;
     }
-    
+
     .tab-container {
       padding: 24px;
       width: 100%;
+      @include font-size(5rem);
     }
-    
+
     .tabs {
       padding: 4px;
       /* border-radius: 12px 12px 0 0; */
@@ -48,12 +49,13 @@
       box-shadow: -1px -1px 3px #ffffff, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4);
       display: flex;
     }
+
     .tab {
       padding: 12px 36px;
       cursor: pointer;
       transition: 0.3s;
     }
-    
+
     .tab.active {
       border-radius: 5px;
       background: #eeeeee;
@@ -61,7 +63,7 @@
         inset 1px 1px 2px rgba(174, 174, 192, 0.2);
       color: #a7b4cc;
     }
-    
+
     .tab-content {
       margin-top: 36px;
       padding: 36px;
@@ -69,35 +71,36 @@
       background: #f0f0f3;
       box-shadow: -10px -10px 30px #ffffff, 10px 10px 30px rgba(174, 174, 192, 0.4);
     }
-    
-    .tab-content > div > img {
+
+    .tab-content>div>img {
       height: 100px;
     }
-    
-    .tab-content > div {
+
+    .tab-content>div {
       animation: fadeIn 1.3s;
     }
-    
+
     .tab-content h2 {
       margin-bottom: 24px;
       font-weight: 400;
     }
-    
+
     @keyframes fadeIn {
       from {
         opacity: 0;
       }
+
       to {
         opacity: 1;
       }
     }
-    
+
     @media (max-width: 838px) {
       .tab-container {
         width: 100%;
       }
     }
-    
+
     @media (min-width: 375px) and (max-width: 418px) {
       .tab {
         padding: 12px 24px;
@@ -105,114 +108,120 @@
     }
   </style>
 
-    <title>实验介绍</title>
-  </head>
-  <body>
-    <h2 align="center" style="top:20%;">微博情感标注</h2>
-    <main class="container">
-      <div class="tab-container">
-        <div class="tabs">
-          <div id="tab1" class="tab active">简介</div>
-          <div id="tab3" class="tab">薪酬</div>
-          <div id="tab4" class="tab">提示</div>
-        </div>
-        <div class="tab-content">
-          <div data-tab="tab1" style="display: block">            
-            <h5 style="line-height:250%;">  在过去的十年中，人类对于AI（人工智能）的需求急剧增加， AI 也被广泛使用于协助情感分析等现实场景。</h5>
-            {{ if id == "D" }}
-            <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注完一条微博后，我们将向你<b>展示AI的判断以及AI对于其判断的自信程度</b>，你可以结合AI的判断重新标注情感（你可以维持原来的判断或者根据AI的判断对标注结果进行修改）。</h5>
-            <!-- <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div> -->
-            {{ elif id == "B" }}
-            <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI的判断以及AI对于其判断的自信程度</b>，你可以结合AI判断做出标注。</h5>
-            <!-- <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div> -->
-            {{ elif id == "A" }}
-            <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。</h5>
-            <!-- <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div> -->
-            {{ elif id == "C" }}
-            <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI的判断、AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI判断做出标注。以下为AI对其判断解释的一个样例。</h5>
-            <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div>
-            {{ elif id == "E" }}
-            <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注完一条微博后，我们将向你<b>展示AI的判断、AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI的判断重新标注情感（你可以维持原来的判断或者根据AI的判断对标注结果进行修改）。以下为AI对其判断解释的一个样例。</h5>
-            <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div>
-            {{ elif id == "F" }}
-            <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI判断做出标注。以下为AI对其判断解释的一个样例。</h5>
-            <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div>
-            {{ elif id == "G" }}
-            <h5 style="line-height:250%;">  在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注完一条微博后，我们将向你<b>展示AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI的判断重新标注情感（你可以维持原来的判断或者根据AI的判断对标注结果进行修改）。以下为AI对其判断解释的一个样例。</h5>
-            <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div>
-            {{ endif }}
-            <br>
-            <div align="center">
+  <title>实验介绍</title>
+</head>
+
+<body>
+  <main class="container">
+    <h2 class="text-center" style="top:20%;">微博情感标注</h2>
+    <div class="tab-container">
+      <div class="tabs">
+        <div id="tab1" class="tab active">简介</div>
+        <div id="tab3" class="tab">薪酬</div>
+        <div id="tab4" class="tab">提示</div>
+      </div>
+      <div class="tab-content">
+        <div id="tabcontent1" data-tab="tab1" style="display: block">
+          <h5 style="line-height:250%;"> 在过去的十年中，人类对于AI（人工智能）的需求急剧增加， AI 也被广泛使用于协助情感分析等现实场景。</h5>
+          {{ if id == "A" }}
+          <h5 style="line-height:250%;"> 在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。</h5>
+          {{ elif id == "B" }}
+          <h5 style="line-height:250%;"> 在接下来的实验中，你将依次阅读<b>共计 64 条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI的判断以及AI对于其判断的自信程度</b>，你可以结合AI判断做出标注。
+          </h5>
+          {{ elif id == "C" }}
+          <h5 style="line-height:250%;"> 在接下来的实验中，你将依次阅读<b>共计 64
+              条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI的判断、AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI判断做出标注。以下为AI对其判断解释的一个样例。
+          </h5>
+          <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;" /></div>
+          {{ elif id == "D" }}
+          <h5 style="line-height:250%;"> 在接下来的实验中，你将依次阅读<b>共计 64
+              条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注完一条微博后，我们将向你<b>展示AI的判断以及AI对于其判断的自信程度</b>，你可以结合AI的判断重新标注情感（你可以维持原来的判断或者根据AI的判断对标注结果进行修改）。
+          </h5>
+          {{ elif id == "E" }}
+          <h5 style="line-height:250%;"> 在接下来的实验中，你将依次阅读<b>共计 64
+              条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注完一条微博后，我们将向你<b>展示AI的判断、AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI的判断重新标注情感（你可以维持原来的判断或者根据AI的判断对标注结果进行修改）。以下为AI对其判断解释的一个样例。
+          </h5>
+          <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;" /></div>
+          {{ elif id == "F" }}
+          <h5 style="line-height:250%;"> 在接下来的实验中，你将依次阅读<b>共计 64
+              条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注的过程中，我们将向你<b>展示AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI判断做出标注。以下为AI对其判断解释的一个样例。
+          </h5>
+          <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;" /></div>
+          {{ elif id == "G" }}
+          <h5 style="line-height:250%;"> 在接下来的实验中，你将依次阅读<b>共计 64
+              条微博内容</b>，在读完一条微博后，请你根据微博内容标注这条微博背后所蕴含的情感。另外，我们已经预训练完成一个<b>性能优于人类标注者平均水平的AI模型</b>，在你标注完一条微博后，我们将向你<b>展示AI对于其判断的自信程度以及AI对于其判断的解释</b>，你可以结合AI的判断重新标注情感（你可以维持原来的判断或者根据AI的判断对标注结果进行修改）。以下为AI对其判断解释的一个样例。
+          </h5>
+          <div><img src="{{ static explaination_path }}" id="xalimg" style="width: 100%;height: 100%;" /></div>
+          {{ endif }}
+          <br>
+          <div align="center">
             <button type="button" class="btn btn-primary" id="button01-next">下一页</button>
-            </div> 
           </div>
-          <div data-tab="tab3" style="display: none">
-            <h5 style="line-height:250%;">整个实验包含<b>两个阶段</b>:<br>第一阶段为标注训练阶段，你将对32条微博文本做标注，<b>请充分利用第一阶段熟悉标注内容</b>。当你完成第一阶段后，你将获得5元的基础薪酬。</h5>
-            {{ if id == "A" }}
-            <h5 style="line-height:250%;">第二阶段为标注测试阶段,在这一阶段，你将对<b>另外</b>32条微博文本做标注。我们将基于你对于第二阶段的标注表现提供奖励，<b>标注准确率越高你所获得的薪酬越丰厚。</b></h5>
-            {{ else }}
-            <h5 style="line-height:250%;">第二阶段为标注测试阶段,在这一阶段，你将对<b>另外</b>32条微博文本做标注，<b>标注过程中我们将不会向你展示AI模型的判断</b>。我们将基于你对于第二阶段的标注表现提供奖励，<b>标注准确率越高你所获得的薪酬越丰厚。</b></h5>
-            {{ endif }}
-            <div><img src="{{ static salary_path }}" id="xalimg" style="width: 100%;height: 100%;"/></div>
-            <div align="center">
-              <button type="button" class="btn btn-secondary" id="button02-pre">上一页</button>
-              <button type="button" class="btn btn-primary" id="button02-next">下一页</button> 
-            </div>
+        </div>
+        <div id="tabcontent2" data-tab="tab3" style="display: none">
+          <h5 style="line-height:250%;">
+            整个实验包含<b>两个阶段</b>:<br>第一阶段为标注训练阶段，你将对32条微博文本做标注，<b>请充分利用第一阶段熟悉标注内容</b>。当你完成第一阶段后，你将获得5元的基础薪酬。</h5>
+          {{ if id == "A" }}
+          <h5 style="line-height:250%;">
+            第二阶段为标注测试阶段,在这一阶段，你将对<b>另外</b>32条微博文本做标注。我们将基于你对于第二阶段的标注表现提供奖励，<b>标注准确率越高你所获得的薪酬越丰厚。</b></h5>
+          {{ else }}
+          <h5 style="line-height:250%;">
+            第二阶段为标注测试阶段,在这一阶段，你将对<b>另外</b>32条微博文本做标注，<b>标注过程中我们将不会向你展示AI模型的判断</b>。我们将基于你对于第二阶段的标注表现提供奖励，<b>标注准确率越高你所获得的薪酬越丰厚。</b>
+          </h5>
+          {{ endif }}
+          <div><img src="{{ static salary_path }}" id="xalimg" style="width: 100%;height: 100%;" /></div>
+          <br>
+          <div align="center">
+            <button type="button" class="btn btn-secondary" id="button02-pre">上一页</button>
+            <button type="button" class="btn btn-primary" id="button02-next">下一页</button>
           </div>
-          <div data-tab="tab4" style="display: none">
-            <h5 style="line-height:250%;">1、实验预计花费20分钟，请预留足够时间且尽量避免在标注完成前退出系统。</h5>
-            <h5 style="line-height:250%;">2、你所获得的报酬仅与标注准确率有关，请尽量<b>提高准确率</b>而不是速度。</h3>
+        </div>
+        <div id="tabcontent3" data-tab="tab4" style="display: none">
+          <h5 style="line-height:250%;">1、实验预计花费20分钟，请预留足够时间且尽量避免在标注完成前退出系统。</h5>
+          <h5 style="line-height:250%;">2、你所获得的报酬仅与标注准确率有关，请尽量<b>提高准确率</b>而不是速度。</h3>
             <h5 style="line-height:250%;">3、标注任务没有时间限制，所以不用担心超时。</h5>
             <h5 style="line-height:250%;">4、你需要在实验结束后完成一份有关标注体验的调查问卷，我们不会泄露你的任何信息，所收集的信息仅供实验研究之用。</h5>
             <h5 style="line-height:250%;">5、如果不能提交结果，请注意检查你是否填写了页面上所需的所有信息。</h5>
+            <br>
             <button class="otree-btn-next btn btn-primary">开始标注</button>
-          </div>
         </div>
       </div>
-    </main>
-    <!-- <script src="index.js"></script> -->
-    <script>
-        const tabContainer = document.querySelector(".tabs");
-        const tabs = document.querySelectorAll(".tab");
-        const tabContents = document.querySelectorAll(".tab-content > *");
-
-        // tab 点击事件
-        tabContainer.addEventListener("click", ({ target: currentTab }) => {
-          tabs.forEach((tab) => {
-            tab.classList.remove("active");
-          });
-
-          currentTab.classList.add("active");
-          changeTab(currentTab.id);
-        });
-
-        // 处理选项卡内容切换
-        const changeTab = (tabId) => {
-          const newTab = document.querySelector(`div[data-tab=${tabId}]`);
-          tabContents.forEach((content) => {
-            content.style.display = "none";
-          });
-          newTab.style.display = "block";
-        };
-
-        // 点击模拟
-        $("#button01-next").click(function(){
-          $("#tab3").trigger('click');
-        })
-
-        $("#button02-next").click(function(){
-          $("#tab4").trigger('click');
-        })
-
-        $("#button02-pre").click(function(){
-          $("#tab1").trigger('click');
-        })
-
-    </script>
-  </body>
+    </div>
+    <br>
+    <div align="center">点击上方导航栏以切换标签页</div>
+  </main>
+  
+  <script>
+    const tabContainer = document.querySelector(".tabs");
+    const tabs = document.querySelectorAll(".tab");
+    const tabContents = document.querySelectorAll(".tab-content > *");
+    // tab 点击事件
+    tabContainer.addEventListener("click", ({ target: currentTab }) => {
+      tabs.forEach((tab) => {
+        tab.classList.remove("active");
+      });
+      currentTab.classList.add("active");
+      changeTab(currentTab.id);
+    });
+    // 处理选项卡内容切换
+    const changeTab = (tabId) => {
+      const newTab = document.querySelector(`div[data-tab=${tabId}]`);
+      tabContents.forEach((content) => {
+        content.style.display = "none";
+      });
+      newTab.style.display = "block";
+    };
+    // 点击模拟
+    $("#button01-next").click(function () {
+      $("#tab3").trigger('click');
+    })
+    $("#button02-next").click(function () {
+      $("#tab4").trigger('click');
+    })
+    $("#button02-pre").click(function () {
+      $("#tab1").trigger('click');
+    })
+  </script>
+</body>
 </html>
-<br>
-<div align="center">点击上方导航栏以切换标签页</div>
-
-
 {{ endblock }}

@@ -12,8 +12,8 @@ dict(
         name='Experiment1', # 实验1
         display_name="Experiment1",
         app_sequence=['Experiment1'],
-        num_demo_participants=800,
-        use_browser_bots=True # 自动填写fields
+        num_demo_participants=320,
+        # use_browser_bots=True # 自动填写fields
     ),
 # dict(
 #         name='Experiment2', # 实验1
@@ -54,5 +54,5 @@ DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = '5908604368973'
 INSTALLED_APPS = ['otree']
-# DEBUG=False #关闭debug模式
+DEBUG=False #关闭debug模式
 #

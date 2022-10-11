@@ -431,15 +431,15 @@
                     alert("您有尚未完成的问题")
                     break
                 }
-                if ((i==4 || i==5 || i==8 || i==6 || i==7) && que == null && (({{ player_id }} - 1) % 5 != 0)){
+                if ((i==4 || i==5 || i==8 || i==6 || i==7) && que == null && (({{ player_id }} - 1) % 7 != 0)){
                     alert("您有尚未完成的问题")
                     break
                 }
-                if (i==10 && que == null && ((({{ player_id }} - 2) % 5 == 0) || (({{ player_id }} - 4) % 5 == 0))){
+                if (i==10 && que == null && ((({{ player_id }} - 2) % 7 == 0) || (({{ player_id }} - 4) % 7 == 0))){
                     alert("您有尚未完成的问题")
                     break
                 }
-                if (i==11 && que == null && ((({{ player_id }} - 3) % 5 == 0) || (({{ player_id }} - 5) % 5 == 0))){
+                if (i==11 && que == null && ((({{ player_id }} - 3) % 7 == 0) || (({{ player_id }} - 5) % 7 == 0) || (({{ player_id }} - 6) % 7 == 0) || (({{ player_id }} - 7) % 7 == 0))){
                     alert("您有尚未完成的问题")
                     break
                 }
