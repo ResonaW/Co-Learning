@@ -59,7 +59,7 @@ class Bonus():
     def calculate_bonus(self):
         manual_df = pd.read_csv(self.manual_csv_name)
         human_correct = self.correct_count(manual_df['label'].to_list(),self.TRUE_LABELS)
-        salary = max(5,5+human_correct*1-(32-human_correct)*0.5)
+        salary = max(5,10+human_correct*1-(32-human_correct)*0.5)
         return human_correct, salary
 
 def get_user_data(df:pd.DataFrame, id_in_group):
@@ -453,7 +453,7 @@ class ExitSurveyPage(Page):
                      )
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 # 写成1时用于测试
+        return player.round_number == 64 # 写成1时用于测试
     @staticmethod
     def before_next_page(player, timeout_happened):
         group_id = get_group_id(player.id_in_group)
