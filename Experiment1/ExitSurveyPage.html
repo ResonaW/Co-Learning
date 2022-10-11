@@ -150,31 +150,7 @@
         <div class="third" align="center" >非常同意</div>
     </div>
 
-    <div>
-        <div class="first" align="center" >在本次实验前，我对利用AI进行情感分析有所了解：</div>
-        <div class="third" align="center" >非常反对</div>
-        <div class="third" align="center" >
-            <form>
-                <div class="star">
-                    <input type="radio" id="rate305" name="ask9" value="5">
-                    <label for="rate305" title="Amazing"></label>
-             
-                    <input type="radio" id="rate304" name="ask9" value="4">
-                    <label for="rate304" title="Good"></label>
-             
-                    <input type="radio" id="rate303" name="ask9" value="3">
-                    <label for="rate303" title="Average"></label>
-             
-                    <input type="radio" id="rate302" name="ask9" value="2">
-                    <label for="rate302" title="Not good"></label>
-             
-                    <input type="radio" id="rate301" name="ask9" value="1">
-                    <label for="rate301" title="Terrible"></label>
-                </div>
-            </form>
-        </div>
-        <div class="third" align="center" >非常同意</div>
-    </div>
+
     {{ if group_id != "A" }}
     <div>
         <div class="first" align="center" >我觉得AI能够根据微博内容做出正确的分类:</div>
@@ -200,6 +176,32 @@
             </form>
         </div>
         <div class="third" align="center" >非常同意</div>
+
+        <div>
+            <div class="first" align="center" >如果可以更换薪酬计算方式，按照AI的判断结果计算薪酬，我会选择更换（现在按照你的判断结果计算薪酬）：</div>
+            <div class="third" align="center" >非常反对</div>
+            <div class="third" align="center" >
+                <form>
+                    <div class="star">
+                        <input type="radio" id="rate305" name="ask9" value="5">
+                        <label for="rate305" title="Amazing"></label>
+                 
+                        <input type="radio" id="rate304" name="ask9" value="4">
+                        <label for="rate304" title="Good"></label>
+                 
+                        <input type="radio" id="rate303" name="ask9" value="3">
+                        <label for="rate303" title="Average"></label>
+                 
+                        <input type="radio" id="rate302" name="ask9" value="2">
+                        <label for="rate302" title="Not good"></label>
+                 
+                        <input type="radio" id="rate301" name="ask9" value="1">
+                        <label for="rate301" title="Terrible"></label>
+                    </div>
+                </form>
+            </div>
+            <div class="third" align="center" >非常同意</div>
+        </div>
     </div>
         <!-- 填补的内容-信任 -->
         <div>
@@ -418,20 +420,19 @@
     </div>
     {{ endif }}
 
-    {{ formfield 'phone' }}
 
     <script>
         function uploaddata(){
-            var names=["ask1","ask2","ask3","ask9","ask4","trust1","trust2","cognitive1","cognitive2","attention","ask6","ask7","ask8"];
-            var ids = ["Q1","Q2","Q3","Q13","Q4","Q9","Q10","Q11","Q12","attention","Q6","Q7","Q8"]
+            var names=["ask1","ask2","ask3","ask4","ask9","trust1","trust2","cognitive1","cognitive2","attention","ask6","ask7","ask8"];
+            var ids = ["Q1","Q2","Q3","Q4","Q13","Q9","Q10","Q11","Q12","attention","Q6","Q7","Q8"]
             for (i=0;i<names.length;i++){
                 var que = $("input[name='"+names[i]+"']:checked").val();
                 console.log(que)
-                if ((i<4 || i==9 || i==12) && que == null){
+                if ((i<3 || i==9 || i==12) && que == null){
                     alert("您有尚未完成的问题")
                     break
                 }
-                if ((i==4 || i==5 || i==8 || i==6 || i==7) && que == null && (({{ player_id }} - 1) % 7 != 0)){
+                if ((i==4 || i==5 || i==8 || i==6 || i==7 || i==3) && que == null && (({{ player_id }} - 1) % 7 != 0)){
                     alert("您有尚未完成的问题")
                     break
                 }
@@ -465,9 +466,9 @@
     {{ formfield_errors 'Q1' }}
     {{ formfield_errors 'Q2' }}
     {{ formfield_errors 'Q3' }}
-    {{ formfield_errors 'Q13' }}
     {{ if group_id != "A" }}
     {{ formfield_errors 'Q4' }}
+    {{ formfield_errors 'Q13' }}
     {{ formfield_errors 'Q9' }}
     {{ formfield_errors 'Q10' }}
     {{ formfield_errors 'Q11' }}
