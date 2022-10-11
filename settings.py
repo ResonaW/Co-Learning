@@ -12,7 +12,7 @@ dict(
         name='Experiment1', # 实验1
         display_name="Experiment1",
         app_sequence=['Experiment1'],
-        num_demo_participants=320,
+        num_demo_participants=7,
         # use_browser_bots=True # 自动填写fields
     ),
 # dict(

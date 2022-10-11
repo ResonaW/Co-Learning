@@ -93,11 +93,11 @@ emotion_dict = { 1:'快乐', 0:'喜爱', 4:'愤怒', 2:'悲伤', 3:'厌恶', 5:'
 class C(BaseConstants):
     NAME_IN_URL = 'Experiment1'
     # 待修改 后续应该是800人
-    PLAYERS_PER_GROUP = 320
+    PLAYERS_PER_GROUP = 7
     NUM_ROUNDS = 64
     # 训练和验证集csv存放位置
     PRELABEL_CSV_PATH  = './watchdog_trainer/prelabel_csv/'
-    TRAIN_CSV_PATH = './watchdog    _trainer/train_csv/' 
+    TRAIN_CSV_PATH = './watchdog_trainer/train_csv/' 
     TEST_CSV_PATH = './watchdog_trainer/test_csv/' 
     OTHER_CSV_PATH = './watchdog_trainer/other_csv/'
 
@@ -251,16 +251,16 @@ class Introduction(Page):
                     )
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # 是否填写过？
         player.player_alipay.loc[len(player.player_alipay)] = [ player.phone, player.id_in_group, get_group_id(player.id_in_group)]
         player.player_alipay.to_csv(player.c.OTHER_CSV_PATH + "player_alipay.csv", index=False)
         init_player_data(player, player.id_in_group)
     @staticmethod
     def error_message(player, values):
-        player_info = pd.read_csv(player.c.OTHER_CSV_PATH + "player_alipay.csv")
-        player_info = player_info.astype({'alipay': 'str'})
-        if values['phone'] in player_info['alipay'].values:
-            return '你已经参与过本实验，请勿重复参加！'
+        if os.path.exists(player.c.OTHER_CSV_PATH + "player_alipay.csv"):
+            player_info = pd.read_csv(player.c.OTHER_CSV_PATH + "player_alipay.csv")
+            player_info = player_info.astype({'alipay': 'str'})
+            if values['phone'] in player_info['alipay'].to_list():
+                return '你已经参与过本实验，请勿重复参加！'
 
 '''首次标注界面（不展示AI）'''
 class PrePage(Page):
@@ -372,7 +372,7 @@ class MyAC(Page):
         r_num = player.round_number
         r_data = player.participant.player_data.iloc[r_num-1]  # 随机抽取
         return dict(
-            ID=r_num,  # 轮数
+            ID=str(r_num),  # 轮数
             group_id=get_group_id(player.id_in_group),
             content_weibo=r_data['text'],
             predict_weibo_sen=r_data['pred_str'],  # 预测类
@@ -453,7 +453,7 @@ class ExitSurveyPage(Page):
                      )
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 64 # 写成1时用于测试
+        return player.round_number == 1 # 写成1时用于测试
     @staticmethod
     def before_next_page(player, timeout_happened):
         group_id = get_group_id(player.id_in_group)

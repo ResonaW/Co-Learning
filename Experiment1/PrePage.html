@@ -8,16 +8,16 @@
     <title>微博情感标注</title>
     <style>
         .first {
-            width: 50%;
-            float: left;
+            /* width: 50%;
+            float: left; */
             height: 50px;
             /* border: 1px solid #3B6273;
                 border-radius:25px; */
         }
 
         .second {
-            width: 50%;
-            float: left;
+            /* width: 50%;
+            float: left; */
             height: 50px;
             /* border: 1px solid #3B6273;
                 border-radius:25px; */
@@ -119,8 +119,6 @@
     </div>
     <div class="form">
         <header>
-            <br>
-            <br>
             <h1>请根据所给微博内容判断该条微博所属的标签类别？</h1>
         </header>
 
@@ -155,15 +153,12 @@
             </div>
         </div>
         <br>
-        <br>
-
-
-        <div>
-            <div class="first" align="center"
-                style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度</div>
-            <div class="second" align="center">
+        <div class="d-sm-flex justify-content-center">
+            <div class="first me-3 text-center"
+                style="font-size: 1.3rem;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度</div>
+            <div class="second d-flex justify-content-center">
                 <form>
-                    <div class="star">
+                    <div class="star" align="center">
                         <input type="radio" id="rate55" name="rating2" value="5">
                         <label for="rate55" title="Amazing"></label>
 
@@ -182,9 +177,6 @@
                 </form>
             </div>
         </div>
-
-
-        <br>
         <br>
         {{ if id == "A" }}
         <button class="button-submit" onclick="uploaddata()">提交</button>

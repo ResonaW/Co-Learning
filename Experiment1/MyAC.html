@@ -7,15 +7,15 @@
         <title>微博情感标注</title>
         <style>
             .first {
-                width: 50%;
-                float:left;
+                /* width: 50%;
+                float:left; */
                 height: 50px;
                 /* border: 1px solid #3B6273; */
                 /* border-radius:25px; */
             }
             .second {
-                width: 50%;
-                float:left;
+                /* width: 50%;
+                float:left; */
                 height: 50px;
                 /* border: 1px solid #3B6273; */
                 /* border-radius:25px; */
@@ -33,30 +33,30 @@
             .form {
             }
             .form header {
-                padding: 1em 0;
-                padding-bottom: 1em;
+                padding: 1rem 0;
+                padding-bottom: 1rem;
             }
             .form header h1 {
                 text-align: center;
-                font-size: 1.3em;
+                font-size: 1.3rem;
                 color: #5f7796;
                 font-weight: bolder;
             }
             .form header h2 {
                 text-align: center;
-                font-size: 1em;
+                font-size: 1rem;
                 color: #94a9c3;
                 font-weight: normal;
             }
             .form .button-submit {
                 font-weight: regular;
                 color: #fff;
-                font-size: 1em;
+                font-size: 1rem;
                 padding: 0.8em 2em;
                 border-radius: 50em;
                 border: none;
                 background: #5f7796;
-                margin: 1em auto 0.3em;
+                margin: 1rem auto 0.3em;
                 display: block;
                 transition: all 0.2s linear;
             }
@@ -94,11 +94,6 @@
         </style>
     </head>
     <script>
-        var x = {{ ID }}
-        function round_left(){
-            var y = 32 - x ;
-            document.getElementById("round").innerHTML="本次标注任务剩余任务数量为："+y;
-        }
         function uploaddata(){
             var answer = $("input[name='place1']:checked").val();
             document.getElementById("sen_result").value=answer;
@@ -106,7 +101,7 @@
         }
     </script>
 </html>
-
+<main class="container">
 <h3 align="center">微博情感标注</h3>
 
 <hr>
@@ -125,295 +120,231 @@
     </div>
 </div>
 
-    <div class="form">
-        <header>
-            {{ if group_id == "A" or ID != 16 }}
-            {{ elif group_id == "B" or ID == 16 }}
+{{ if ID == "16" and group_id != "A" }}
+<div class="form">
+    <header>
+        <div class="container">
             <body onload="clickbutton()">
                 <div style="border-style:dashed;border-radius:25px;">
                     <br>
-                    <div>  
-                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
-                        <div class="second" align="center" >
+                    {{ if group_id in "BDCE" }}
+                    <div class="d-sm-flex justify-content-center">
+                        <div class="first text-center" style="font-size: 1.3rem;color: #5f7796;font-weight: bolder;">
+                            AI模型对其判断的信心程度为：</div>
+                        <div class="second d-flex justify-content-center">
                             <form>
                                 <div class="star">
                                     <input type="radio" id="rate555" name="rating0" value="5">
                                     <label for="rate555" title="Amazing"></label>
-                        
+
                                     <input type="radio" id="rate444" name="rating0" value="4">
                                     <label for="rate444" title="Good"></label>
-                                
+
                                     <input type="radio" id="rate333" name="rating0" value="3">
                                     <label for="rate333" title="Average"></label>
-                                
+
                                     <input type="radio" id="rate222" name="rating0" value="2">
                                     <label for="rate222" title="Not good"></label>
-                                
+
                                     <input type="radio" id="rate111" name="rating0" value="1">
                                     <label for="rate111" title="Terrible"></label>
                                 </div>
                             </form>
                         </div>
                     </div>
-                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>  
-                </div>
-            </body> 
-            <br>
-            {{ elif group_id == "C" or ID == 16 }}
-            <body onload="clickbutton()">
-                <div style="border-style:dashed;border-radius:25px;">
-                    <br>
-                    <div>  
-                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
-                        <div class="second" align="center" >
-                            <form>
-                                <div class="star">
-                                    <input type="radio" id="rate555" name="rating0" value="5">
-                                    <label for="rate555" title="Amazing"></label>
-                        
-                                    <input type="radio" id="rate444" name="rating0" value="4">
-                                    <label for="rate444" title="Good"></label>
-                                
-                                    <input type="radio" id="rate333" name="rating0" value="3">
-                                    <label for="rate333" title="Average"></label>
-                                
-                                    <input type="radio" id="rate222" name="rating0" value="2">
-                                    <label for="rate222" title="Not good"></label>
-                                
-                                    <input type="radio" id="rate111" name="rating0" value="1">
-                                    <label for="rate111" title="Terrible"></label>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
-                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
-                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>  
+                    <h1 class="mb-4">AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1>
+                    </h1>
+                    {{ endif }}
+                    {{ if group_id in "CEFG" }}
+                    <h1 class="my-3"><img class="img-fluid" src="{{ static image_path }}" id="xalimg" /></h1>
+                    <h1 class="my-3">以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>
+                    {{ endif }}
                 </div>
             </body>
             <br>
-            {{ elif group_id == "D" or ID == 16 }}
-            <body onload="clickbutton()">
-                <div style="border-style:dashed;border-radius:25px;">
-                    <br>
-                    <div>  
-                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
-                        <div class="second" align="center" >
-                            <form>
-                                <div class="star">
-                                    <input type="radio" id="rate555" name="rating0" value="5">
-                                    <label for="rate555" title="Amazing"></label>
-                        
-                                    <input type="radio" id="rate444" name="rating0" value="4">
-                                    <label for="rate444" title="Good"></label>
-                                
-                                    <input type="radio" id="rate333" name="rating0" value="3">
-                                    <label for="rate333" title="Average"></label>
-                                
-                                    <input type="radio" id="rate222" name="rating0" value="2">
-                                    <label for="rate222" title="Not good"></label>
-                                
-                                    <input type="radio" id="rate111" name="rating0" value="1">
-                                    <label for="rate111" title="Terrible"></label>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>  
-                </div>
-            </body> 
-            <br>
-            {{ elif group_id == "E" or ID == 16 }}
-            <body onload="clickbutton()">
-                <div style="border-style:dashed;border-radius:25px;">
-                    <br>
-                    <div>  
-                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
-                        <div class="second" align="center" >
-                            <form>
-                                <div class="star">
-                                    <input type="radio" id="rate555" name="rating0" value="5">
-                                    <label for="rate555" title="Amazing"></label>
-                        
-                                    <input type="radio" id="rate444" name="rating0" value="4">
-                                    <label for="rate444" title="Good"></label>
-                                
-                                    <input type="radio" id="rate333" name="rating0" value="3">
-                                    <label for="rate333" title="Average"></label>
-                                
-                                    <input type="radio" id="rate222" name="rating0" value="2">
-                                    <label for="rate222" title="Not good"></label>
-                                
-                                    <input type="radio" id="rate111" name="rating0" value="1">
-                                    <label for="rate111" title="Terrible"></label>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <h1>AI模型认为此条微博所属的标签类别为：<span1 id="predict_label">“{{ predict_weibo_sen }}”</span1></h1>
-                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
-                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>    
-                </div>
-            </body>
-            <br>
-            {{ elif group_id == "F" or ID == 16 }}
-            <body onload="clickbutton()">
-                <div style="border-style:dashed;border-radius:25px;">
-                    <br>
-                    <div>  
-                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
-                        <div class="second" align="center" >
-                            <form>
-                                <div class="star">
-                                    <input type="radio" id="rate555" name="rating0" value="5">
-                                    <label for="rate555" title="Amazing"></label>
-                        
-                                    <input type="radio" id="rate444" name="rating0" value="4">
-                                    <label for="rate444" title="Good"></label>
-                                
-                                    <input type="radio" id="rate333" name="rating0" value="3">
-                                    <label for="rate333" title="Average"></label>
-                                
-                                    <input type="radio" id="rate222" name="rating0" value="2">
-                                    <label for="rate222" title="Not good"></label>
-                                
-                                    <input type="radio" id="rate111" name="rating0" value="1">
-                                    <label for="rate111" title="Terrible"></label>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
-                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>  
-                </div>
-            </body> 
-            <br>
-            {{ elif group_id == "G" or ID == 16 }}
-            <body onload="clickbutton()">
-                <div style="border-style:dashed;border-radius:25px;">
-                    <br>
-                    <div>  
-                        <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">AI模型对其判断的信心程度为：</div>
-                        <div class="second" align="center" >
-                            <form>
-                                <div class="star">
-                                    <input type="radio" id="rate555" name="rating0" value="5">
-                                    <label for="rate555" title="Amazing"></label>
-                        
-                                    <input type="radio" id="rate444" name="rating0" value="4">
-                                    <label for="rate444" title="Good"></label>
-                                
-                                    <input type="radio" id="rate333" name="rating0" value="3">
-                                    <label for="rate333" title="Average"></label>
-                                
-                                    <input type="radio" id="rate222" name="rating0" value="2">
-                                    <label for="rate222" title="Not good"></label>
-                                
-                                    <input type="radio" id="rate111" name="rating0" value="1">
-                                    <label for="rate111" title="Terrible"></label>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <h1><img src="{{ static image_path }}" id="xalimg"/></h1>
-                    <h1>以上为AI模型对此条微博的具体分析,不同颜色代表了不同的情绪，颜色越深情感程度越高</h1>    
-                </div>
-            </body>
-            <br>
+            {{ if group_id == "B" }}
+            <h1 class="my-3">请结合所给微博、AI预测的标签以及AI对于标签的自信程度判断该条微博所属的标签类别？</h1>
+            {{ elif group_id == "C" }}
+            <h1 class="my-3">请请结合所给的微博内容、AI预测的标签以及AI对于决策的解释，判断微博所属的标签类别？</h1>
+            {{ elif group_id == "D" }}
+            <h1 class="my-3">请结合所给的微博内容、AI预测的标签以及AI对于标签的自信程度，重新判断微博所属的标签类别？</h1>
+            {{ elif group_id == "E" }}
+            <h1 class="my-3">请结合所给的微博内容、AI预测的标签以及AI对于决策的解释，重新判断微博所属的标签类别？</h1>
+            {{ elif group_id == "F" }}
+            <h1 class="my-3">请结合所给的微博内容以及AI对于决策的解释，判断微博所属的标签类别？</h1>
+            {{ elif group_id == "G" }}
+            <h1 class="my-3">请结合所给的微博内容以及AI对于决策的解释，重新判断微博所属的标签类别？</h1>
             {{ endif }}
-                <br>
-                <br>
-                <h1>请根据评论内容判断该条评论所属的标签类别，你标注的结果将最终决定你的薪酬！</h1>
-        </header>
-        <div class="row" align="center">
-            <div class="column">
-                <input type="radio" name="place1" value="4" /><span2 style="font-size: 20px color= #000">  愤怒</span>
-            </div>
-            <div class="column">
-                <input type="radio" name="place1" value="3" /><span2 style="font-size: 20px color= #000">  厌恶</span>
-            </div>
-            <div class="column">
-                <input type="radio" name="place1" value="6" /><span2 style="font-size: 20px color= #000">  恐惧</span>
-            </div>
-            <div class="column">
-                <input type="radio" name="place1" value="1" /><span2 style="font-size: 20px color= #000">  快乐</span>
-            </div>
-            <div class="column">
-                <input type="radio" name="place1" value="0" /><span2 style="font-size: 20px color= #000">  喜爱</span>
-            </div>
-            <div class="column">
-                <input type="radio" name="place1" value="5" /><span2 style="font-size: 20px color= #000">  惊讶</span>
-            </div>
-            <div class="column">
-                <input type="radio" name="place1" value="2" /><span2 style="font-size: 20px color= #000">  悲伤</span>
-            </div>
         </div>
-        <br>
-        <br>
+    </header>
 
-        {{ if group_id == "A" or ID != 16 }}
-        <br>
-        {{ else }}
-        <div>
-            <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对AI判断的信任程度</div>
-            <div class="second" align="center" >
-                <form>
-                    <div class="star">
-                        <input type="radio" id="rate5" name="rating1" value="5">
-                        <label for="rate5" title="Amazing"></label>
-                 
-                        <input type="radio" id="rate4" name="rating1" value="4">
-                        <label for="rate4" title="Good"></label>
-                 
-                        <input type="radio" id="rate3" name="rating1" value="3">
-                        <label for="rate3" title="Average"></label>
-                 
-                        <input type="radio" id="rate2" name="rating1" value="2">
-                        <label for="rate2" title="Not good"></label>
-                 
-                        <input type="radio" id="rate1" name="rating1" value="1">
-                        <label for="rate1" title="Terrible"></label>
-                    </div>
-                </form>
-            </div>
+    <div class="row" align="center">
+        <div class="column">
+            <input type="radio" name="place1" value="4" />
+            <span2 style="font-size: 1.3rem color= #000"> 愤怒</span>
         </div>
-        {{ endif }}
+        <div class="column">
+            <input type="radio" name="place1" value="3" />
+            <span2 style="font-size: 1.3rem color= #000"> 厌恶</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="6" />
+            <span2 style="font-size: 1.3rem color= #000"> 恐惧</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="1" />
+            <span2 style="font-size: 1.3rem color= #000"> 快乐</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="0" />
+            <span2 style="font-size: 1.3rem color= #000"> 喜爱</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="5" />
+            <span2 style="font-size: 1.3rem color= #000"> 惊讶</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="2" />
+            <span2 style="font-size: 1.3rem color= #000"> 悲伤</span>
+        </div>
+    </div>
+    <br>
 
-        <div>
-            <div class="first" align="center" style="text-align: center;font-size: 1.3em;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度</div>
-            <div class="second" align="center" >
+    <div class="d-sm-flex justify-content-center">
+        <div class="first me-3 text-center" style="font-size: 1.3rem;color: #5f7796;font-weight: bolder;">请选择你对AI判断的信任程度
+        </div>
+        <div class="second d-flex justify-content-center">
+            <form>
+                <div class="star">
+                    <input type="radio" id="rate5" name="rating1" value="5">
+                    <label for="rate5" title="Amazing"></label>
+
+                    <input type="radio" id="rate4" name="rating1" value="4">
+                    <label for="rate4" title="Good"></label>
+
+                    <input type="radio" id="rate3" name="rating1" value="3">
+                    <label for="rate3" title="Average"></label>
+
+                    <input type="radio" id="rate2" name="rating1" value="2">
+                    <label for="rate2" title="Not good"></label>
+
+                    <input type="radio" id="rate1" name="rating1" value="1">
+                    <label for="rate1" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-sm-flex justify-content-center">
+        <div class="first me-3 text-center" style="font-size: 1.3rem;color: #5f7796;font-weight: bolder;">请选择你对自己答案的自信程度
+        </div>
+        <div class="second d-flex justify-content-center">
             <form>
                 <div class="star">
                     <input type="radio" id="rate55" name="rating2" value="5">
                     <label for="rate55" title="Amazing"></label>
-             
+
                     <input type="radio" id="rate44" name="rating2" value="4">
                     <label for="rate44" title="Good"></label>
-             
+
                     <input type="radio" id="rate33" name="rating2" value="3">
                     <label for="rate33" title="Average"></label>
-             
+
                     <input type="radio" id="rate22" name="rating2" value="2">
                     <label for="rate22" title="Not good"></label>
-             
+
                     <input type="radio" id="rate11" name="rating2" value="1">
                     <label for="rate11" title="Terrible"></label>
                 </div>
             </form>
-            </div>
         </div>
+    </div>
 
-        <br>
-        <br>
-        <button class="button-submit" onclick="uploaddata()">提交</button>
+    <br>
+    <button class="button-submit" onclick="uploaddata()">提交</button>
 
     <input type="hidden" name="sen_result" id="sen_result" />
-
+    <input type="hidden" name="Human_confidence" id="Human_confidence" />
+    <input type="hidden" name="AI_confidence" id="AI_confidence" />
+    <input type="hidden" name="pagetime" id="pagetime" />
 
 </div>
+
+{{ else }}
+<div class="form">
+    <header>
+        {{ if ID == "48" }}
+        <h1>请根据微博内容判断该条微博所属的标签类别，你标注的结果将最终决定你的薪酬！</h1>
+        {{ else }}
+        <h1>请根据所给微博内容判断该条微博所属的标签类别？</h1>
+        {{ endif }}
+    </header>
+
+    <div class="row" align="center">
+        <div class="column">
+            <input type="radio" name="place1" value="4" />
+            <span2 style="font-size: 20px color= #000"> 愤怒</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="3" />
+            <span2 style="font-size: 20px color= #000"> 厌恶</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="6" />
+            <span2 style="font-size: 20px color= #000"> 恐惧</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="1" />
+            <span2 style="font-size: 20px color= #000"> 快乐</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="0" />
+            <span2 style="font-size: 20px color= #000"> 喜爱</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="5" />
+            <span2 style="font-size: 20px color= #000"> 惊讶</span>
+        </div>
+        <div class="column">
+            <input type="radio" name="place1" value="2" />
+            <span2 style="font-size: 20px color= #000"> 悲伤</span>
+        </div>
+    </div>
+    <br>
+    <div class="d-sm-flex justify-content-center">
+        <div class="first me-3 text-center" style="font-size: 1.3rem;color: #5f7796;font-weight: bolder;">
+            请选择你对自己答案的自信程度</div>
+        <div class="second d-flex justify-content-center">
+            <form>
+                <div class="star" align="center">
+                    <input type="radio" id="rate55" name="rating2" value="5">
+                    <label for="rate55" title="Amazing"></label>
+
+                    <input type="radio" id="rate44" name="rating2" value="4">
+                    <label for="rate44" title="Good"></label>
+
+                    <input type="radio" id="rate33" name="rating2" value="3">
+                    <label for="rate33" title="Average"></label>
+
+                    <input type="radio" id="rate22" name="rating2" value="2">
+                    <label for="rate22" title="Not good"></label>
+
+                    <input type="radio" id="rate11" name="rating2" value="1">
+                    <label for="rate11" title="Terrible"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <button class="button-submit" onclick="uploaddata()">提交</button>
+
+    <input type="hidden" name="sen_result" id="sen_result" />
+    <input type="hidden" name="Human_confidence" id="Human_confidence" />
+    <input type="hidden" name="pagetime" id="pagetime" />
+
 </div>
-
-
+{{ endif }}
+</main>
 <!-- 星星的样式 -->
 <style>
     .star{
@@ -456,7 +387,7 @@
     <!-- 自动选中 -->
 <script>
     function clickbutton(){
-        var confidence_AI = {{ AI_predict_rate }};
+        var confidence_AI = "{{ AI_predict_rate }}";
         if (confidence_AI == '1') {
             document.getElementById("rate111").checked="checked";
         }
